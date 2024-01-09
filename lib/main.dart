@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 void main() async {
-  await dotenv.load(fileName: 'assets/env/.env');
+  await dotenv.load(fileName: 'assets/env/.env.sample');
 
   /// 라이브러리 메모리에 appKey 등록
   /// 지도가 호출되기 전에만 세팅해 주면 됩니다.
