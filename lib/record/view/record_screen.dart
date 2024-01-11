@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/driving_records.dart';
+import '../widgets/recent_drive_widget.dart';
+
 class RecordScreen extends StatelessWidget {
   const RecordScreen({super.key});
 
@@ -7,39 +10,51 @@ class RecordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          color: Colors.grey,
-          height: MediaQuery.of(context).size.height * 0.5,
-          width: MediaQuery.of(context).size.width * 1.0,
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-          child: const Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "내정보",
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                  ),
-                  SizedBox(width: 20),
-                  Text("NULL DATA")
-                ],
-              )
-            ],
+        const RecentDriveWidget(),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: MediaQuery.of(context).size.height * 0.02,
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: const Text(
+            "Driving Records",
+            style: TextStyle(
+              fontSize: 20,
+            ),
           ),
         ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.015,
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.05,
+        ),
+        Row(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.05,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.95,
+              height: MediaQuery.of(context).size.height * 0.28,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  const DrivingRecordsCard(),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.07,
+                  ),
+                  const DrivingRecordsCard(),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.07,
+                  ),
+                  const DrivingRecordsCard(),
+                ],
+              ),
+            ),
+          ],
+        )
       ],
     );
   }

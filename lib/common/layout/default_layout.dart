@@ -21,7 +21,8 @@ class DefaultLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor ?? Colors.white,
+      backgroundColor:
+          backgroundColor ?? const Color.fromARGB(255, 224, 239, 240),
       appBar: renderAppBar(),
       drawer: drawer,
       body: child,
