@@ -1,7 +1,9 @@
+import 'package:b612_project_team3/common/component/custom_drawer.dart';
 import 'package:b612_project_team3/common/layout/default_layout.dart';
 import 'package:b612_project_team3/community/view/community_screen.dart';
 import 'package:b612_project_team3/course/view/coures_screen.dart';
 import 'package:b612_project_team3/navigation/view/navigation_screen.dart';
+import 'package:b612_project_team3/record/view/record_screen.dart';
 import 'package:b612_project_team3/team/view/team_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +25,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    controller = TabController(length: 4, vsync: this);
+    controller = TabController(length: 5, vsync: this);
 
     controller.addListener(tabListener);
   }
@@ -45,6 +47,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return DefaultLayout(
       title: '자전거 주행 앱?',
+      drawer: const CustomDrawer(),
       bottomNavigationBar: BottomNavigationBar(
         selectedFontSize: 12,
         unselectedFontSize: 12,
@@ -63,7 +66,11 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
             label: '주변코스',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.groups),
+            icon: Icon(Icons.location_on_outlined),
+            label: '지도',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.groups_outlined),
             label: '팀',
           ),
           BottomNavigationBarItem(
@@ -76,8 +83,9 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         physics: const NeverScrollableScrollPhysics(),
         controller: controller,
         children: const [
-          NavigationScreen(),
+          RecordScreen(),
           CourseScreen(),
+          NavigationScreen(),
           TeamScreen(),
           CommunityScreen(),
         ],
