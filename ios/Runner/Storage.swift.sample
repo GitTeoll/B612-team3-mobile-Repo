@@ -1,0 +1,5 @@
+import Foundation
+
+struct Storage{
+    let googleMapsApiKey = "API_KEY"
+}
