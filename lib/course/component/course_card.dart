@@ -14,6 +14,14 @@ class CourseCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.7),
+              spreadRadius: 0,
+              blurRadius: 5.0,
+              offset: const Offset(2, 10),
+            ),
+          ],
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),

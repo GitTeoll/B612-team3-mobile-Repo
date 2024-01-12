@@ -92,6 +92,7 @@ class CourseScreen extends StatelessWidget {
     return SizedBox(
       height: 280,
       child: ListView.separated(
+        clipBehavior: Clip.none,
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         physics: const AlwaysScrollableScrollPhysics(),
         scrollDirection: Axis.horizontal,
