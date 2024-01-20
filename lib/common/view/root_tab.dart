@@ -2,6 +2,7 @@ import 'package:b612_project_team3/common/component/custom_drawer.dart';
 import 'package:b612_project_team3/common/layout/default_layout.dart';
 import 'package:b612_project_team3/community/view/community_screen.dart';
 import 'package:b612_project_team3/course/view/coures_screen.dart';
+import 'package:b612_project_team3/navigation/view/gmap_navigation_screen.dart';
 import 'package:b612_project_team3/navigation/view/navigation_screen.dart';
 import 'package:b612_project_team3/record/view/record_screen.dart';
 import 'package:b612_project_team3/team/view/team_screen.dart';
@@ -85,7 +86,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         children: const [
           RecordScreen(),
           CourseScreen(),
-          NavigationScreen(),
+          GMapNavigationScreen(),
           TeamScreen(),
           CommunityScreen(),
         ],

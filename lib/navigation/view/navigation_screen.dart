@@ -6,8 +6,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class NavigationScreen extends StatefulWidget {
-  static String get routeName => 'navigation';
-
   const NavigationScreen({super.key});
 
   @override
