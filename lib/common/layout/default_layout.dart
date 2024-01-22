@@ -7,6 +7,7 @@ class DefaultLayout extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final Widget? drawer;
+  final bool drawerEnableOpenDragGesture;
 
   const DefaultLayout({
     required this.child,
@@ -15,6 +16,7 @@ class DefaultLayout extends StatelessWidget {
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.drawer,
+    this.drawerEnableOpenDragGesture = false,
     super.key,
   });
 
@@ -25,6 +27,7 @@ class DefaultLayout extends StatelessWidget {
           backgroundColor ?? const Color.fromARGB(255, 224, 239, 240),
       appBar: renderAppBar(),
       drawer: drawer,
+      drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
       body: child,
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
