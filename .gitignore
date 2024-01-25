@@ -46,3 +46,4 @@ app.*.map.json
 .env
 .vscode/launch.json
 .vscode/settings.json
+android/gradle/wrapper/gradle-wrapper.properties
