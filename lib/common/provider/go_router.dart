@@ -1,6 +1,6 @@
 import 'package:b612_project_team3/common/view/root_tab.dart';
 import 'package:b612_project_team3/common/view/splash_screen.dart';
-import 'package:b612_project_team3/navigation/view/drive_done.dart';
+import 'package:b612_project_team3/navigation/view/drive_done_screen.dart';
 import 'package:b612_project_team3/navigation/view/navigation_detail_screen.dart';
 import 'package:b612_project_team3/user/view/login_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,8 +32,8 @@ final routerProvider = Provider<GoRouter>(
         ),
         GoRoute(
           path: '/drivedone',
-          name: DriveDone.routeName,
-          builder: (_, __) => const DriveDone(),
+          name: DriveDoneScreen.routeName,
+          builder: (_, __) => const DriveDoneScreen(),
         ),
       ],
       initialLocation: '/splash',

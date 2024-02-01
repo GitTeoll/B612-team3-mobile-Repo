@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:go_router/go_router.dart';
 
-class DriveDone extends StatelessWidget {
+class DriveDoneScreen extends StatelessWidget {
   static String get routeName => 'drivedone';
 
-  const DriveDone({super.key});
+  const DriveDoneScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
