@@ -1,3 +1,4 @@
+import 'package:b612_project_team3/common/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatelessWidget {
@@ -20,7 +21,7 @@ class ActionButton extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 186, 237, 140),
+          color: PRIMARY_COLOR,
           borderRadius: BorderRadius.circular(size / 2),
         ),
         child: Center(

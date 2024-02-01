@@ -26,7 +26,12 @@ class SearchBox extends StatelessWidget {
             Expanded(
               child: TextFormField(
                 onChanged: onChanged,
+                onTapOutside: (_) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 decoration: const InputDecoration(
+                  hintText: 'search',
+                  hintStyle: TextStyle(color: Colors.grey),
                   isDense: true,
                   contentPadding: EdgeInsets.symmetric(
                     vertical: 0,

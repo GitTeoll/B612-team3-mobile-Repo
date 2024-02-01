@@ -1,3 +1,4 @@
+import 'package:b612_project_team3/common/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class RecentDriveWidget extends StatelessWidget {
@@ -80,7 +81,7 @@ class RecentDriveWidget extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.27,
                   height: MediaQuery.of(context).size.height * 0.04,
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 186, 237, 140),
+                    color: PRIMARY_COLOR,
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: const Center(
@@ -97,7 +98,7 @@ class RecentDriveWidget extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.20,
                     height: MediaQuery.of(context).size.height * 0.04,
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 186, 237, 140),
+                      color: PRIMARY_COLOR,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: const Center(
@@ -113,7 +114,7 @@ class RecentDriveWidget extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.10,
                   height: MediaQuery.of(context).size.height * 0.04,
                   decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 186, 237, 140),
+                      color: PRIMARY_COLOR,
                       // borderRadius: BorderRadius.circular(15),
                       shape: BoxShape.circle),
                   //원 내부 텍스트 설정
@@ -129,7 +130,7 @@ class RecentDriveWidget extends StatelessWidget {
                   width: MediaQuery.of(context).size.width * 0.10,
                   height: MediaQuery.of(context).size.height * 0.04,
                   decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 186, 237, 140),
+                      color: PRIMARY_COLOR,
                       // borderRadius: BorderRadius.circular(15),
                       shape: BoxShape.circle),
                   child: const Center(

@@ -1,3 +1,4 @@
+import 'package:b612_project_team3/common/const/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
@@ -63,7 +64,7 @@ class CourseCard extends StatelessWidget {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 186, 237, 140),
+                      color: PRIMARY_COLOR,
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                   ),
@@ -71,7 +72,7 @@ class CourseCard extends StatelessWidget {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 186, 237, 140),
+                      color: PRIMARY_COLOR,
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                   ),
@@ -79,7 +80,7 @@ class CourseCard extends StatelessWidget {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 186, 237, 140),
+                      color: PRIMARY_COLOR,
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                   ),

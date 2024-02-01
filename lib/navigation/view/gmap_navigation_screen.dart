@@ -20,6 +20,12 @@ class GMapNavigationScreen extends StatelessWidget {
             child: FutureBuilder(
               future: getCurrentLocation(),
               builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text('에러 발생'),
+                  );
+                }
+
                 if (!snapshot.hasData) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -62,9 +68,15 @@ class GMapNavigationScreen extends StatelessWidget {
     );
   }
 
-  Future<Position> getCurrentLocation() async {
-    Position? curPosition = await Geolocator.getLastKnownPosition();
-    curPosition ??= await Geolocator.getCurrentPosition();
+  Future<Position?> getCurrentLocation() async {
+    Position? curPosition;
+    try {
+      curPosition = await Geolocator.getCurrentPosition(
+        timeLimit: const Duration(seconds: 4),
+      );
+    } catch (e) {
+      curPosition = await Geolocator.getLastKnownPosition();
+    }
     return curPosition;
   }
 }

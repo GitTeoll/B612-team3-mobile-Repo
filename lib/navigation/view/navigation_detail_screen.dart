@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:b612_project_team3/common/layout/default_layout.dart';
-import 'package:b612_project_team3/navigation/component/action_button.dart';
+import 'package:b612_project_team3/navigation/component/navigation_controller.dart';
+import 'package:b612_project_team3/navigation/component/navigation_status_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class NavigationDetailScreen extends StatefulWidget {
@@ -23,74 +23,35 @@ class _NavigationDetailScreenState extends State<NavigationDetailScreen> {
   StreamSubscription<Position>? positionStream;
   Position? curPosition;
   List<LatLng> polylineCoordinates = [];
-  late DateTime startTime;
-  late Timer timer;
+  Timer? timer;
   int elapsedTime = 0;
   double totalTravelDistance = 0.0;
+  late double minLat;
+  late double maxLat;
+  late double minLng;
+  late double maxLng;
+  late LatLngBounds latLngBounds;
 
   @override
   void initState() {
     super.initState();
-    startTime = DateTime.now();
-    startTimer();
-    getCurrentLocation();
-  }
-
-  void startTimer() {
-    timer = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        setState(() {
-          ++elapsedTime;
-        });
-      },
-    );
-  }
-
-  void getCurrentLocation() async {
-    curPosition = await Geolocator.getLastKnownPosition();
-    curPosition ??= await Geolocator.getCurrentPosition();
-    setState(() {});
-    googleMapController = await _controller.future;
-
-    positionStream = Geolocator.getPositionStream().listen(positionListener);
-  }
-
-  void positionListener(Position position) async {
-    totalTravelDistance += Geolocator.distanceBetween(
-      curPosition!.latitude,
-      curPosition!.longitude,
-      position.latitude,
-      position.longitude,
-    );
-
-    curPosition = position;
-
-    polylineCoordinates.add(
-      LatLng(curPosition!.latitude, curPosition!.longitude),
-    );
-
-    googleMapController!.animateCamera(
-      CameraUpdate.newLatLng(
-        LatLng(
-          curPosition!.latitude,
-          curPosition!.longitude,
-        ),
-      ),
-    );
-
-    setState(() {});
+    startPositionTracking();
   }
 
   @override
   void dispose() {
-    timer.cancel();
+    if (timer != null) {
+      timer!.cancel();
+    }
+
     if (positionStream != null) {
       positionStream!.cancel();
     }
+
     if (googleMapController != null) {
       googleMapController!.dispose();
     }
+
     super.dispose();
   }
 
@@ -130,160 +91,121 @@ class _NavigationDetailScreenState extends State<NavigationDetailScreen> {
           ),
           Flexible(
             flex: 1,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(46.0),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final size =
-                        min(constraints.maxHeight, constraints.maxWidth);
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              curPosition == null
-                                  ? '0.0'
-                                  : curPosition!.speed.toStringAsFixed(1),
-                              style: const TextStyle(
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const Text(
-                              'speed',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const Text(
-                              'm/s',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        ActionButton(
-                          size: size,
-                          content: 'Stop!',
-                          ontap: () {
-                            context.pop();
-                          },
-                        ),
-                        const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'SOS',
-                              style: TextStyle(
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ),
+            fit: FlexFit.tight,
+            child: timer != null
+                ? NavigationController(
+                    timer: timer!,
+                    curPosition: curPosition,
+                    startTimer: startTimer,
+                    setCameraLatLngBounds: setCameraLatLngBounds,
+                  )
+                : const SizedBox(),
           ),
           Flexible(
             flex: 1,
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width / 8,
+                horizontal: MediaQuery.of(context).size.width / 10,
               ),
               child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              totalTravelDistance.toStringAsFixed(2),
-                              style: const TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const Text(
-                              'm',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              elapsedTime.toString(),
-                              style: const TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const Text(
-                              'sec',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '125',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              'bpm',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                child: timer != null
+                    ? NavigationStatusBar(
+                        totalTravelDistance: totalTravelDistance,
+                        elapsedTime: elapsedTime,
+                      )
+                    : const SizedBox(),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void startTimer() {
+    if (timer != null) {
+      timer!.cancel();
+    }
+    timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        setState(() {
+          ++elapsedTime;
+        });
+      },
+    );
+  }
+
+  void startPositionTracking() async {
+    try {
+      curPosition = await Geolocator.getCurrentPosition(
+        timeLimit: const Duration(seconds: 4),
+      );
+    } catch (e) {
+      curPosition = await Geolocator.getLastKnownPosition();
+    }
+    minLat = maxLat = curPosition!.latitude;
+    minLng = maxLng = curPosition!.longitude;
+    latLngBounds = LatLngBounds(
+      southwest: LatLng(minLat, minLng),
+      northeast: LatLng(maxLat, maxLng),
+    );
+    setState(() {});
+    googleMapController = await _controller.future;
+
+    startTimer();
+    polylineCoordinates.add(
+      LatLng(curPosition!.latitude, curPosition!.longitude),
+    );
+    positionStream = Geolocator.getPositionStream().listen(positionListener);
+  }
+
+  void positionListener(Position position) async {
+    if (timer!.isActive) {
+      totalTravelDistance += Geolocator.distanceBetween(
+            curPosition!.latitude,
+            curPosition!.longitude,
+            position.latitude,
+            position.longitude,
+          ) /
+          1000;
+    }
+
+    curPosition = position;
+
+    minLat = min(minLat, curPosition!.latitude);
+    maxLat = max(maxLat, curPosition!.latitude);
+    minLng = min(minLng, curPosition!.longitude);
+    maxLng = max(maxLng, curPosition!.longitude);
+
+    latLngBounds = LatLngBounds(
+      southwest: LatLng(minLat, minLng),
+      northeast: LatLng(maxLat, maxLng),
+    );
+
+    polylineCoordinates.add(
+      LatLng(curPosition!.latitude, curPosition!.longitude),
+    );
+
+    if (timer!.isActive) {
+      googleMapController!.animateCamera(
+        CameraUpdate.newLatLng(
+          LatLng(
+            curPosition!.latitude,
+            curPosition!.longitude,
+          ),
+        ),
+      );
+    } else {
+      setCameraLatLngBounds();
+    }
+
+    setState(() {});
+  }
+
+  void setCameraLatLngBounds() {
+    googleMapController!.animateCamera(
+      CameraUpdate.newLatLngBounds(latLngBounds, 80),
     );
   }
 }
