@@ -1,2 +1,3 @@
 # local.properties 파일에 아래 내용 추가
 google.maps.apiKey=API_KEY
+native.appKey=API_KEY
