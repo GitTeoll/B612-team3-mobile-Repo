@@ -48,8 +48,8 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        manifestPlaceholders += [googleMapsApiKey: 'AIzaSyC1FysR1uj-h282itGREM8zpVkZTP69Dcc']
-        manifestPlaceholders += [nativeAppKey: 'cae7295ce9016c767edca531237d4768']
+        manifestPlaceholders += [googleMapsApiKey: googleMapsApiKey]
+        manifestPlaceholders += [nativeAppKey: nativeAppKey]
     }
 
     buildTypes {
