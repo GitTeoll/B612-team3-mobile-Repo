@@ -10,7 +10,7 @@
         android:icon="@mipmap/ic_launcher">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${googleMapsApiKey}"/>
+            android:value="d503c86dd348f4ba572711588952dc13"/>
         <activity 
             android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
             android:exported="true">
@@ -21,7 +21,7 @@
 
                 <!-- "kakao${YOUR_NATIVE_APP_KEY}://oauth" 형식의 앱 실행 스킴 설정 -->
                 <!-- 카카오 로그인 Redirect URI -->
-                <data android:scheme="kakao${nativeAppKey}" android:host="oauth"/>
+                <data android:scheme="kakaocae7295ce9016c767edca531237d4768" android:host="oauth"/>
             </intent-filter>
         </activity>
         <activity
