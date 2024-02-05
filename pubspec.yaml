@@ -28,6 +28,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_localizations: 
+    sdk: flutter
+  localization: ^2.1.1
   flutter:
     sdk: flutter
 
@@ -42,6 +45,12 @@ dependencies:
   google_maps_flutter: ^2.5.2
   kakao_flutter_sdk_user: ^1.8.0
   flutter_rating_bar: ^4.0.1
+  flutter_secure_storage: ^9.0.0
+  json_annotation: ^4.8.1
+  retrofit: '>=4.0.0 <5.0.0'
+  logger: any  #for logging purpose
+  dio: ^5.4.0
+  daum_postcode_search: ^0.0.2
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +62,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  retrofit_generator: '>=7.0.0 <8.0.0'
+  build_runner: '>=2.3.0 <4.0.0'
+  json_serializable: ^6.6.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

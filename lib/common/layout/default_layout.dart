@@ -2,21 +2,25 @@ import 'package:flutter/material.dart';
 
 class DefaultLayout extends StatelessWidget {
   final Color? backgroundColor;
+  final Color? appBarBackGroundColor;
   final Widget child;
   final String? title;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final Widget? drawer;
   final bool drawerEnableOpenDragGesture;
+  final double? appBarHeight;
 
   const DefaultLayout({
     required this.child,
     this.backgroundColor,
+    this.appBarBackGroundColor,
     this.title,
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.drawer,
     this.drawerEnableOpenDragGesture = false,
+    this.appBarHeight,
     super.key,
   });
 
@@ -40,8 +44,10 @@ class DefaultLayout extends StatelessWidget {
     } else {
       return AppBar(
         backgroundColor:
-            backgroundColor ?? const Color.fromARGB(255, 224, 239, 240),
+            appBarBackGroundColor ?? const Color.fromARGB(255, 224, 239, 240),
         elevation: 0,
+        centerTitle: true,
+        toolbarHeight: appBarHeight,
         title: Text(
           title!,
           style: const TextStyle(

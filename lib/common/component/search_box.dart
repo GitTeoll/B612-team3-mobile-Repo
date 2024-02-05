@@ -29,12 +29,13 @@ class SearchBox extends StatelessWidget {
                 onTapOutside: (_) {
                   FocusManager.instance.primaryFocus?.unfocus();
                 },
+                textInputAction: TextInputAction.search,
                 decoration: const InputDecoration(
                   hintText: 'search',
                   hintStyle: TextStyle(color: Colors.grey),
                   isDense: true,
                   contentPadding: EdgeInsets.symmetric(
-                    vertical: 0,
+                    vertical: 0.0,
                     horizontal: 4.0,
                   ),
                   border: InputBorder.none,

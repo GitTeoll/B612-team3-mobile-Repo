@@ -1,6 +1,8 @@
+import 'package:b612_project_team3/common/const/data.dart';
 import 'package:b612_project_team3/common/provider/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -14,6 +16,9 @@ void main() async {
 
   // 카카오 로그인 세팅
   KakaoSdk.init(nativeAppKey: dotenv.env['NATIVE_APP_KEY'] ?? '');
+
+  // ip 세팅
+  ip = dotenv.env['IP'] ?? '';
 
   runApp(
     const ProviderScope(
@@ -30,6 +35,15 @@ class _App extends ConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
+      localizationsDelegates: const [
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ko', 'KR'),
+        Locale('en', 'US'),
+      ],
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

@@ -72,7 +72,7 @@ class GMapNavigationScreen extends StatelessWidget {
     Position? curPosition;
     try {
       curPosition = await Geolocator.getCurrentPosition(
-        timeLimit: const Duration(seconds: 4),
+        timeLimit: const Duration(seconds: 10),
       );
     } catch (e) {
       curPosition = await Geolocator.getLastKnownPosition();

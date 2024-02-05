@@ -59,10 +59,12 @@ class _NavigationDetailScreenState extends State<NavigationDetailScreen> {
   Widget build(BuildContext context) {
     return DefaultLayout(
       backgroundColor: Colors.grey.shade700,
+      title: '',
+      appBarHeight: 0,
       child: Column(
         children: [
           Flexible(
-            flex: 5,
+            flex: 9,
             child: curPosition == null
                 ? const Center(
                     child: CircularProgressIndicator(),
@@ -90,7 +92,7 @@ class _NavigationDetailScreenState extends State<NavigationDetailScreen> {
                   ),
           ),
           Flexible(
-            flex: 1,
+            flex: 2,
             fit: FlexFit.tight,
             child: timer != null
                 ? NavigationController(
@@ -102,7 +104,7 @@ class _NavigationDetailScreenState extends State<NavigationDetailScreen> {
                 : const SizedBox(),
           ),
           Flexible(
-            flex: 1,
+            flex: 2,
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width / 10,
@@ -139,7 +141,7 @@ class _NavigationDetailScreenState extends State<NavigationDetailScreen> {
   void startPositionTracking() async {
     try {
       curPosition = await Geolocator.getCurrentPosition(
-        timeLimit: const Duration(seconds: 4),
+        timeLimit: const Duration(seconds: 10),
       );
     } catch (e) {
       curPosition = await Geolocator.getLastKnownPosition();
@@ -157,7 +159,9 @@ class _NavigationDetailScreenState extends State<NavigationDetailScreen> {
     polylineCoordinates.add(
       LatLng(curPosition!.latitude, curPosition!.longitude),
     );
-    positionStream = Geolocator.getPositionStream().listen(positionListener);
+    positionStream = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(distanceFilter: 10),
+    ).listen(positionListener);
   }
 
   void positionListener(Position position) async {
