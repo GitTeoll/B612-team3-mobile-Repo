@@ -42,7 +42,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
+local.properties
 .env
 # Ignore Gradle project-specific cache directory
 .gradle
