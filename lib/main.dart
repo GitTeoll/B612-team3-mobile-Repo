@@ -12,10 +12,11 @@ void main() async {
 
   /// 라이브러리 메모리에 appKey 등록
   /// 지도가 호출되기 전에만 세팅해 주면 됩니다.
-  AuthRepository.initialize(appKey: dotenv.env['APP_KEY'] ?? '');
+  AuthRepository.initialize(
+      appKey: dotenv.env['KAKAO_JAVASCRIPT_APP_KEY'] ?? '');
 
   // 카카오 로그인 세팅
-  KakaoSdk.init(nativeAppKey: dotenv.env['NATIVE_APP_KEY'] ?? '');
+  KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY'] ?? '');
 
   // ip 세팅
   ip = dotenv.env['IP'] ?? '';
