@@ -51,6 +51,9 @@ dependencies:
   logger: any #for logging purpose
   dio: ^5.4.0
   daum_postcode_search: ^0.0.2
+  firebase_core: ^2.25.4
+  firebase_auth: ^4.17.4
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,9 @@
 import 'package:b612_project_team3/common/const/data.dart';
 import 'package:b612_project_team3/common/dio/dio.dart';
 import 'package:b612_project_team3/common/model/login_response.dart';
+import 'package:b612_project_team3/firebase/firebase_auth_remote_data_source.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -21,6 +23,8 @@ class AuthRepository {
     required this.baseUrl,
     required this.dio,
   });
+
+  final _firebaseAuthDataSource = FirebaseAuthRemoteDataSource();
 
   Future<LoginResponse?> login() async {
     // 카카오톡 실행 가능 여부 확인
@@ -63,6 +67,15 @@ class AuthRepository {
       '$baseUrl/user/mobile/kakao',
       data: {"id": "$id"},
     );
+    //firebase token으로 로그인 진행
+    final token = await _firebaseAuthDataSource.createCustomToken({
+      'uid': user.id.toString(),
+      // 'displayName': user!.kakaoAccount!.profile!.nickname,
+      // 'email': user!.kakaoAccount!.email!,
+      // 'photoURL': user!.kakaoAccount!.profile!.profileImageUrl!,
+    });
+
+    await FirebaseAuth.instance.signInWithCustomToken(token);
 
     return LoginResponse.fromJson(
       resp.data,
