@@ -1,7 +1,8 @@
 import 'package:http/http.dart' as http;
 
 class FirebaseAuthRemoteDataSource {
-  final String url = '서버주소';
+  final String url =
+      'https://console.firebase.google.com/project/cycle-60fc2/overview';
 
   Future<String> createCustomToken(Map<String, dynamic> user) async {
     final customTokenResponse = await http.post(Uri.parse(url), body: user);
