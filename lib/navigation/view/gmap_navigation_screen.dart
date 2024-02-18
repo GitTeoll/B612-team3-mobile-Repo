@@ -13,26 +13,26 @@ class GMapNavigationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      child: Column(
-        children: [
-          Flexible(
-            flex: 4,
-            child: FutureBuilder(
-              future: getCurrentLocation(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('에러 발생'),
-                  );
-                }
+      child: FutureBuilder(
+        future: Geolocator.getCurrentPosition(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text('에러 발생'),
+            );
+          }
 
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-                return GoogleMap(
+          return Column(
+            children: [
+              Flexible(
+                flex: 4,
+                child: GoogleMap(
                   initialCameraPosition: CameraPosition(
                     target: LatLng(
                       snapshot.data!.latitude,
@@ -41,42 +41,31 @@ class GMapNavigationScreen extends StatelessWidget {
                     zoom: 16,
                   ),
                   myLocationEnabled: true,
-                );
-              },
-            ),
-          ),
-          Flexible(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final size = min(constraints.maxHeight, constraints.maxWidth);
-                  return ActionButton(
-                    ontap: () {
-                      context.go('/navigation');
-                    },
-                    size: size,
-                    content: 'Start!',
-                  );
-                },
+                ),
               ),
-            ),
-          ),
-        ],
+              Flexible(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final size =
+                          min(constraints.maxHeight, constraints.maxWidth);
+                      return ActionButton(
+                        ontap: () {
+                          context.go('/navigation');
+                        },
+                        size: size,
+                        content: 'Start!',
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
-  }
-
-  Future<Position?> getCurrentLocation() async {
-    Position? curPosition;
-    try {
-      curPosition = await Geolocator.getCurrentPosition(
-        timeLimit: const Duration(seconds: 10),
-      );
-    } catch (e) {
-      curPosition = await Geolocator.getLastKnownPosition();
-    }
-    return curPosition;
   }
 }

@@ -1,15 +1,15 @@
 import 'dart:ui';
 
+import 'package:b612_project_team3/common/utils/data_utils.dart';
+import 'package:b612_project_team3/record/model/record_model.dart';
 import 'package:flutter/material.dart';
 
 class NavigationStatusBar extends StatelessWidget {
-  final double totalTravelDistance;
-  final int elapsedTime;
+  final CurrentRecordModel currentRecordModel;
 
   const NavigationStatusBar({
     super.key,
-    required this.totalTravelDistance,
-    required this.elapsedTime,
+    required this.currentRecordModel,
   });
 
   @override
@@ -28,7 +28,7 @@ class NavigationStatusBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  totalTravelDistance.toStringAsFixed(2),
+                  currentRecordModel.totalTravelDistance.toStringAsFixed(2),
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w600,
@@ -48,7 +48,7 @@ class NavigationStatusBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${elapsedTime ~/ 60}:${(elapsedTime % 60).toString().padLeft(2, '0')}',
+                  DataUtils.secToMMSS(currentRecordModel.elapsedTime),
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w600,

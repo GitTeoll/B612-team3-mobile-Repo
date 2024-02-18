@@ -18,6 +18,9 @@ void main() async {
   // 카카오 로그인 세팅
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY'] ?? '');
 
+  // wakelock 사용위해 세팅
+  WidgetsFlutterBinding.ensureInitialized();
+
   // ip 세팅
   ip = dotenv.env['IP'] ?? '';
 
