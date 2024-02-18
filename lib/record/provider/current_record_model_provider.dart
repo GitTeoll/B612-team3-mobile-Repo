@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:b612_project_team3/common/utils/data_utils.dart';
 import 'package:b612_project_team3/record/model/record_model.dart';
 import 'package:b612_project_team3/record/provider/drive_done_record_model_provider.dart';
-import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -22,7 +21,6 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   StreamSubscription<Position>? _positionStreamSubscription;
   Timer? _timer;
   late DateTime _startTime;
-  late DateTime _endTime;
   late double _minLat;
   late double _maxLat;
   late double _minLng;
@@ -40,8 +38,6 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
 
   void _startPositionTracking() async {
     Wakelock.enable();
-
-    initialBearing = (await FlutterCompass.events?.first)?.heading;
 
     _positionStreamSubscription = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(distanceFilter: 10),
@@ -66,8 +62,6 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
     state = prevState.copywith(isStopped: false);
 
     if (googleMapController != null) {
-      final bearing = (await FlutterCompass.events?.first)?.heading;
-
       googleMapController!.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -76,7 +70,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
               prevState.curPosition.longitude,
             ),
             zoom: 16,
-            bearing: bearing ?? 0.0,
+            bearing: prevState.curPosition.heading,
           ),
         ),
       );
@@ -112,7 +106,6 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
 
     _timer?.cancel();
     await _positionStreamSubscription?.cancel();
-    _endTime = DateTime.now();
 
     await googleMapController!.moveCamera(
       CameraUpdate.newLatLngBounds(getLatLngBounds(), 80),
@@ -126,7 +119,9 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
           DriveDoneRecordModel(
             id: uuid.v4(),
             startTime: _startTime.toIso8601String(),
-            endTime: _endTime.toIso8601String(),
+            endTime: driveDoneState.curPosition.timestamp
+                .toLocal()
+                .toIso8601String(),
             elapsedTime: driveDoneState.elapsedTime,
             totalTravelDistance: DataUtils.decimalPointFix(
                 driveDoneState.totalTravelDistance, 3),
@@ -148,7 +143,6 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   void _updateCameraPosition(Position position) async {
     if (googleMapController != null) {
       final zoom = await googleMapController!.getZoomLevel();
-      final bearing = (await FlutterCompass.events?.first)?.heading;
 
       googleMapController!.animateCamera(
         CameraUpdate.newCameraPosition(
@@ -158,7 +152,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
               position.longitude,
             ),
             zoom: zoom,
-            bearing: bearing ?? 0.0,
+            bearing: position.heading,
           ),
         ),
       );
@@ -176,7 +170,8 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
       _minLng = _maxLng = position.longitude;
       _latlngList.add([position.latitude, position.longitude]);
 
-      _startTime = DateTime.now();
+      _startTime = position.timestamp.toLocal();
+      initialBearing = position.heading;
 
       state = CurrentRecordModel(
         curPosition: position,

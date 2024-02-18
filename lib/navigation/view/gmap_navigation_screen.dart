@@ -14,7 +14,7 @@ class GMapNavigationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultLayout(
       child: FutureBuilder(
-        future: Geolocator.getCurrentPosition(),
+        future: getCurrentPosition(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -67,5 +67,11 @@ class GMapNavigationScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<Position> getCurrentPosition() async {
+    await Geolocator.getPositionStream().listen((_) {}).cancel();
+
+    return Geolocator.getCurrentPosition();
   }
 }
