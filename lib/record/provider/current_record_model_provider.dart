@@ -39,16 +39,15 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   void _startPositionTracking() async {
     Wakelock.enable();
 
-    _positionStreamSubscription = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(distanceFilter: 10),
-    ).listen(_positionListener);
+    _positionStreamSubscription =
+        Geolocator.getPositionStream().listen(_positionListener);
   }
 
   void startCameraTracking(GoogleMapController controller) {
     googleMapController = controller;
   }
 
-  LatLngBounds getLatLngBounds() {
+  LatLngBounds _getLatLngBounds() {
     return LatLngBounds(
       southwest: LatLng(_minLat, _minLng),
       northeast: LatLng(_maxLat, _maxLng),
@@ -92,7 +91,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
 
     if (googleMapController != null) {
       googleMapController!.animateCamera(
-        CameraUpdate.newLatLngBounds(getLatLngBounds(), 80),
+        CameraUpdate.newLatLngBounds(_getLatLngBounds(), 80),
       );
     }
   }
@@ -108,7 +107,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
     await _positionStreamSubscription?.cancel();
 
     await googleMapController!.moveCamera(
-      CameraUpdate.newLatLngBounds(getLatLngBounds(), 80),
+      CameraUpdate.newLatLngBounds(_getLatLngBounds(), 80),
     );
 
     final driveDoneState = state as CurrentRecordModel;
@@ -132,6 +131,8 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
               DataUtils.decimalPointFix((_minLat + _maxLat) / 2, 6),
               DataUtils.decimalPointFix((_minLng + _maxLng) / 2, 6),
             ],
+            southwestLatLng: [_minLat, _minLng],
+            northeastLatLng: [_maxLat, _maxLng],
             zoom: DataUtils.decimalPointFix(
                 await googleMapController!.getZoomLevel(), 6),
           ),
@@ -188,21 +189,32 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
     final prevPosition = prevState.curPosition;
     double nexttotalTravelDistance = prevState.totalTravelDistance;
     final nextpolylineCoordinates = prevState.polylineCoordinates;
+    final distanceBetween = Geolocator.distanceBetween(
+      prevPosition.latitude,
+      prevPosition.longitude,
+      position.latitude,
+      position.longitude,
+    );
 
-    // 변하는 위치에 맞춰 카메라 이동 및 거리 갱신
-    // 일시중지 된 경우 카메라 추적 및 거리 갱신 하지않음
+    // 변하는 위치에 맞춰 카메라 이동
+    // 일시중지 된 경우 이동하지 않음
     if (_timer!.isActive) {
       _updateCameraPosition(position);
-
-      nexttotalTravelDistance += Geolocator.distanceBetween(
-            prevPosition.latitude,
-            prevPosition.longitude,
-            position.latitude,
-            position.longitude,
-          ) /
-          1000;
     }
 
+    // 변위가 15m 미만이면 상태 값 업데이트 하지 않음
+    if (distanceBetween < 15.0) {
+      return;
+    }
+
+    // 일시중지 되지 않은 경우에만 거리 값 업데이트
+    if (_timer!.isActive) {
+      nexttotalTravelDistance += distanceBetween / 1000;
+    }
+
+    // 일시중지 여부와 상관없이
+    // 변위가 15m 이상일 때
+    // 경로는 계속 추적, 기록
     _minLat = min(_minLat, position.latitude);
     _maxLat = max(_maxLat, position.latitude);
     _minLng = min(_minLng, position.longitude);

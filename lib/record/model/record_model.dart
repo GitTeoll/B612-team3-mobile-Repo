@@ -59,6 +59,8 @@ class DriveDoneRecordModel extends RecordModelBase {
   final List<double> startLatLng;
   final List<double> endLatLng;
   final List<double> centerLatLng;
+  final List<double> southwestLatLng;
+  final List<double> northeastLatLng;
   final double zoom;
   String name = "";
   int rating = 3;
@@ -76,6 +78,8 @@ class DriveDoneRecordModel extends RecordModelBase {
     required this.startLatLng,
     required this.endLatLng,
     required this.centerLatLng,
+    required this.southwestLatLng,
+    required this.northeastLatLng,
     required this.zoom,
   });
 

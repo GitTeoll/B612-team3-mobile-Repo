@@ -24,6 +24,9 @@ void main() async {
   // ip 세팅
   ip = dotenv.env['IP'] ?? '';
 
+  // 구글 static map 세팅
+  googleMapsApiKey = dotenv.env['GOOGLE_MAPS_APIKEY'] ?? '';
+
   runApp(
     const ProviderScope(
       child: _App(),
