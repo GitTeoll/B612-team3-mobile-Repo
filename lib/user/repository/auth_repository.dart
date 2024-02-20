@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dio = ref.watch(dioProvider);
@@ -53,6 +54,17 @@ class AuthRepository {
     } else {
       try {
         await UserApi.instance.loginWithKakaoAccount();
+        final user = await UserApi.instance.me();
+        print("uid = ${user.id.toString()}");
+        //firebase token으로 로그인 진행
+        final token = await _firebaseAuthDataSource.createCustomToken({
+          'uid': user.id.toString(),
+          // 'displayName': user!.kakaoAccount!.profile!.nickname,
+          // 'email': user!.kakaoAccount!.email!,
+          // 'photoURL': user!.kakaoAccount!.profile!.profileImageUrl!,
+        });
+        print("token = $token");
+        await FirebaseAuth.instance.signInWithCustomToken(token);
         print('카카오계정으로 로그인 성공');
       } catch (error) {
         print('카카오계정으로 로그인 실패 $error');
@@ -67,15 +79,6 @@ class AuthRepository {
       '$baseUrl/user/mobile/kakao',
       data: {"id": "$id"},
     );
-    //firebase token으로 로그인 진행
-    final token = await _firebaseAuthDataSource.createCustomToken({
-      'uid': user.id.toString(),
-      // 'displayName': user!.kakaoAccount!.profile!.nickname,
-      // 'email': user!.kakaoAccount!.email!,
-      // 'photoURL': user!.kakaoAccount!.profile!.profileImageUrl!,
-    });
-
-    await FirebaseAuth.instance.signInWithCustomToken(token);
 
     return LoginResponse.fromJson(
       resp.data,
