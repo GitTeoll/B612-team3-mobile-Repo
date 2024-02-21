@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
-import 'package:uuid/uuid.dart';
 import 'package:wakelock/wakelock.dart';
 
 final currentRecordModelProvider = StateNotifierProvider.autoDispose<
@@ -112,11 +111,8 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
 
     final driveDoneState = state as CurrentRecordModel;
 
-    const uuid = Uuid();
-
     _ref.read(driveDoneRecordModelProvider.notifier).completeDrive(
           DriveDoneRecordModel(
-            id: uuid.v4(),
             startTime: _startTime.toIso8601String(),
             endTime: driveDoneState.curPosition.timestamp
                 .toLocal()

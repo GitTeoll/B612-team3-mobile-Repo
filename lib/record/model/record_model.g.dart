@@ -9,7 +9,6 @@ part of 'record_model.dart';
 DriveDoneRecordModel _$DriveDoneRecordModelFromJson(
         Map<String, dynamic> json) =>
     DriveDoneRecordModel(
-      id: json['id'] as String,
       startTime: json['startTime'] as String,
       endTime: json['endTime'] as String,
       elapsedTime: json['elapsedTime'] as int,
@@ -36,12 +35,11 @@ DriveDoneRecordModel _$DriveDoneRecordModelFromJson(
       ..rating = json['rating'] as int
       ..difficulty = json['difficulty'] as int
       ..review = json['review'] as String
-      ..public = json['public'] as bool;
+      ..publicCourse = json['publicCourse'] as bool;
 
 Map<String, dynamic> _$DriveDoneRecordModelToJson(
         DriveDoneRecordModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'startTime': instance.startTime,
       'endTime': instance.endTime,
       'elapsedTime': instance.elapsedTime,
@@ -57,5 +55,5 @@ Map<String, dynamic> _$DriveDoneRecordModelToJson(
       'rating': instance.rating,
       'difficulty': instance.difficulty,
       'review': instance.review,
-      'public': instance.public,
+      'publicCourse': instance.publicCourse,
     };

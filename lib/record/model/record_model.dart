@@ -50,7 +50,6 @@ class CurrentRecordModel extends RecordModelBase {
 
 @JsonSerializable()
 class DriveDoneRecordModel extends RecordModelBase {
-  final String id;
   final String startTime;
   final String endTime;
   final int elapsedTime; // sec
@@ -66,10 +65,9 @@ class DriveDoneRecordModel extends RecordModelBase {
   int rating = 3;
   int difficulty = 3;
   String review = "";
-  bool public = false;
+  bool publicCourse = false;
 
   DriveDoneRecordModel({
-    required this.id,
     required this.startTime,
     required this.endTime,
     required this.elapsedTime,

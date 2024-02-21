@@ -173,7 +173,7 @@ class DriveDoneScreen extends ConsumerWidget {
                               actions: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    driveDoneRecordModel.public = true;
+                                    driveDoneRecordModel.publicCourse = true;
                                     context.pop();
                                   },
                                   child: const Text("예"),

@@ -1,4 +1,5 @@
 import 'package:b612_project_team3/user/model/user_model.dart';
+import 'package:b612_project_team3/user/provider/auth_provider.dart';
 import 'package:b612_project_team3/user/provider/user_info_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,8 +21,25 @@ class CustomDrawer extends ConsumerWidget {
           DrawerHeader(
             decoration: const BoxDecoration(color: Colors.blue),
             child: userInfo is UserModel
-                ? Text(
-                    '${userInfo.name} 님',
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${userInfo.name} 님',
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          ref.read(authProvider.notifier).logout();
+                        },
+                        child: const Text(
+                          '로그아웃',
+                          style: TextStyle(
+                            fontSize: 12,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ],
                   )
                 : const Text('에러'),
           ),
