@@ -3,6 +3,7 @@ import 'package:b612_project_team3/user/model/user_model.dart';
 import 'package:b612_project_team3/user/provider/user_info_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   static String get routeName => 'login';
@@ -30,7 +31,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               setState(() {
                 isLoading = true;
               });
-
+              context.go('/');
               if (await ref.read(userInfoProvider.notifier).login()
                   is UserModelError) {
                 setState(() {
