@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 final currentRecordModelProvider = StateNotifierProvider.autoDispose<
     CurrentRecordModelStateNotifier, RecordModelBase>(
@@ -36,7 +36,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   }
 
   void _startPositionTracking() async {
-    Wakelock.enable();
+    WakelockPlus.enable();
 
     _positionStreamSubscription =
         Geolocator.getPositionStream().listen(_positionListener);
@@ -134,7 +134,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
           ),
         );
 
-    Wakelock.disable();
+    WakelockPlus.disable();
   }
 
   void _updateCameraPosition(Position position) async {
