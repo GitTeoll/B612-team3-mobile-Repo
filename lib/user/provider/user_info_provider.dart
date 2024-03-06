@@ -4,6 +4,7 @@ import 'package:b612_project_team3/firebase/service/auth_service.dart';
 import 'package:b612_project_team3/user/model/user_model.dart';
 import 'package:b612_project_team3/user/repository/auth_repository.dart';
 import 'package:b612_project_team3/user/repository/user_info_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -81,6 +82,7 @@ class UserInfoStateNotifier extends StateNotifier<UserModelBase?> {
       final userResp = await repository.getInfo();
       //firebase 로그인
       firebaseAuthService().firebaseLogin(userResp.name);
+
       state = userResp;
 
       return userResp;

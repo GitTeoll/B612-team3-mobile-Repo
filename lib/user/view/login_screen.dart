@@ -31,7 +31,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               setState(() {
                 isLoading = true;
               });
-              context.go('/');
               if (await ref.read(userInfoProvider.notifier).login()
                   is UserModelError) {
                 setState(() {

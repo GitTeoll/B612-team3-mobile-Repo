@@ -16,7 +16,7 @@ const admin = require("firebase-admin");
 const { onCall } = require("firebase-functions/v2/https");
 const { onDocumentWritten } = require("firebase-functions/v2/firestore");
 
-var serviceAccount = require("./cycle-60fc2-firebase-adminsdk-1y3nb-5ff3db7562.json");
+var serviceAccount = require("./cycle-60fc2-firebase-adminsdk-1y3nb-a2797f6b29.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
