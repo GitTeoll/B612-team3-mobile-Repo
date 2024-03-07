@@ -7,6 +7,7 @@ import 'package:b612_project_team3/user/repository/user_info_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 final userInfoProvider =
     StateNotifierProvider<UserInfoStateNotifier, UserModelBase?>(
@@ -69,6 +70,8 @@ class UserInfoStateNotifier extends StateNotifier<UserModelBase?> {
   Future<UserModelBase> login() async {
     try {
       state = UserModelLoading();
+      var hash = await KakaoSdk.origin;
+      print("hash = $hash");
 
       final resp = await authRepository.login();
 

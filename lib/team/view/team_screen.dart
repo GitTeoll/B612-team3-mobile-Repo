@@ -1,6 +1,7 @@
 import 'package:b612_project_team3/common/component/search_box.dart';
 import 'package:b612_project_team3/common/const/colors.dart';
 import 'package:b612_project_team3/firebase/service/database_service.dart';
+import 'package:b612_project_team3/team/widgets/group_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,6 +44,15 @@ class _TeamScreenState extends State<TeamScreen> {
         groups = snapshot;
       });
     });
+  }
+
+  //String manipulation (groupId_groupName)의 형태에서 manipulation
+  String getId(String res) {
+    return res.substring(0, res.indexOf('_'));
+  }
+
+  String getName(String res) {
+    return res.substring(res.indexOf("_") + 1);
   }
 
   @override
@@ -92,7 +102,21 @@ class _TeamScreenState extends State<TeamScreen> {
             if (snapshot.data['groups'] != null) {
               //데이터가 존재하고 null값도 아니며 길이가 0이 아닌경우 (성공)
               if (snapshot.data['groups'].length != 0) {
-                return const Text('그룹이 존재합니다.');
+                return Flexible(
+                  child: ListView.builder(
+                      itemCount: snapshot.data['groups'].length,
+                      itemBuilder: (context, index) {
+                        //최근 생성 그룹이 위로 향하게 하는 index 값
+                        int reverseIndex =
+                            snapshot.data['groups'].length - index - 1;
+                        return GroupTile(
+                            userName: snapshot.data['fullName'],
+                            groupId:
+                                getId(snapshot.data['groups'][reverseIndex]),
+                            groupName:
+                                getName(snapshot.data['groups'][reverseIndex]));
+                      }),
+                );
               }
               //데이터가 존재하고 null도 아니지만 길이가 0인경우(존재하지 않음)
               else {
@@ -116,70 +140,83 @@ class _TeamScreenState extends State<TeamScreen> {
 
   popUpDialogue(BuildContext context) {
     showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("그룹 생성하기"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _createIsLoading == true
-                    ? const Center(child: CircularProgressIndicator())
-                    : TextField(
-                        onChanged: (value) {
-                          groupName = value;
-                        },
-                        style: const TextStyle(
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(20),
+      barrierDismissible: true,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: ((context, setState) {
+            return AlertDialog(
+              title: const Text("그룹 생성하기"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _createIsLoading == true
+                      ? const Center(child: CircularProgressIndicator())
+                      : TextField(
+                          onChanged: (value) {
+                            groupName = value;
+                          },
+                          style: const TextStyle(
+                            color: Colors.black,
                           ),
-                          errorBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(20),
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      )
+                        )
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("취소")),
+                ElevatedButton(
+                    onPressed: () async {
+                      if (groupName != "") {
+                        setState(() {
+                          _createIsLoading = true;
+                        });
+
+                        // DatabaseService 인스턴스 생성
+                        DatabaseService dbService = DatabaseService(
+                            uid: FirebaseAuth.instance.currentUser!.uid);
+
+                        // 비동기적으로 사용자 이름을 불러오기
+                        String userName = await dbService.getUserFullName();
+
+                        //아래 코드 안되면 await dbService.createGroup(userName, FirebaseAuth.instance.currentUser!.uid, groupName); 이렇게 해볼 것
+                        DatabaseService(
+                                uid: FirebaseAuth.instance.currentUser!.uid)
+                            .createGroup(
+                                userName,
+                                FirebaseAuth.instance.currentUser!.uid,
+                                groupName)
+                            .whenComplete(() {
+                          _createIsLoading = false;
+                        });
+                        Navigator.of(context).pop();
+                        showSnackbar(context, "그룹이 성공적으로 생성되었습니다.");
+                      }
+                    },
+                    child: const Text("생성")),
               ],
-            ),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("취소")),
-              ElevatedButton(
-                  onPressed: () async {
-                    if (groupName != "") {
-                      setState(() {
-                        _createIsLoading = true;
-                      });
-                      // DatabaseService 인스턴스 생성
-                      DatabaseService dbService = DatabaseService(
-                          uid: FirebaseAuth.instance.currentUser!.uid);
-                      // 비동기적으로 사용자 이름을 불러오기
-                      String userName = await dbService.getUserFullName();
-                      //아래 코드 안되면 await dbService.createGroup(userName, FirebaseAuth.instance.currentUser!.uid, groupName); 이렇게 해볼 것
-                      DatabaseService(
-                              uid: FirebaseAuth.instance.currentUser!.uid)
-                          .createGroup(
-                              userName,
-                              FirebaseAuth.instance.currentUser!.uid,
-                              groupName);
-                    }
-                  },
-                  child: const Text("생성")),
-            ],
-          );
-        });
+            );
+          }),
+        );
+      },
+    );
   }
 
   noGroupWidget() {
@@ -207,5 +244,10 @@ class _TeamScreenState extends State<TeamScreen> {
         ],
       ),
     );
+  }
+
+  void showSnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
