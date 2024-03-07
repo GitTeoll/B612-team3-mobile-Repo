@@ -47,7 +47,7 @@ class NavigationDetailScreen extends ConsumerWidget {
                     currentRecordModel.curPosition.latitude,
                     currentRecordModel.curPosition.longitude,
                   ),
-                  zoom: 16,
+                  zoom: 17,
                   bearing: ref
                           .read(currentRecordModelProvider.notifier)
                           .initialBearing ??

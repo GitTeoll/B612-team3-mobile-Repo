@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:b612_project_team3/common/utils/data_utils.dart';
 import 'package:b612_project_team3/record/model/record_model.dart';
 import 'package:b612_project_team3/record/provider/drive_done_record_model_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,6 +20,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   final Ref _ref;
   StreamSubscription<Position>? _positionStreamSubscription;
   Timer? _timer;
+  late LocationSettings locationSettings;
   late DateTime _startTime;
   late double _minLat;
   late double _maxLat;
@@ -38,8 +40,33 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   void _startPositionTracking() async {
     WakelockPlus.enable();
 
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      locationSettings = AndroidSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        intervalDuration: const Duration(seconds: 1),
+        foregroundNotificationConfig: const ForegroundNotificationConfig(
+          notificationText: "B612 앱이 주행 기록을 추적하고 있습니다.",
+          notificationTitle: "B612",
+          enableWakeLock: true,
+          setOngoing: true,
+        ),
+      );
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        activityType: ActivityType.fitness,
+        allowBackgroundLocationUpdates: true,
+        showBackgroundLocationIndicator: true,
+      );
+    } else {
+      locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+      );
+    }
+
     _positionStreamSubscription =
-        Geolocator.getPositionStream().listen(_positionListener);
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen(_positionListener);
   }
 
   void startCameraTracking(GoogleMapController controller) {
@@ -60,14 +87,14 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
     state = prevState.copywith(isStopped: false);
 
     if (googleMapController != null) {
-      googleMapController!.animateCamera(
+      await googleMapController!.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
             target: LatLng(
               prevState.curPosition.latitude,
               prevState.curPosition.longitude,
             ),
-            zoom: 16,
+            zoom: 17,
             bearing: prevState.curPosition.heading,
           ),
         ),
