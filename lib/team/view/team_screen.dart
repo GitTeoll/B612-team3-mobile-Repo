@@ -123,7 +123,7 @@ class _TeamScreenState extends State<TeamScreen> {
                 return noGroupWidget();
               }
             }
-            //좀재하지만 null인경우
+            //존재하지만 null인경우
             else {
               return noGroupWidget();
             }

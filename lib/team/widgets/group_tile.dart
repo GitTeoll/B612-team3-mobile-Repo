@@ -1,4 +1,6 @@
+import 'package:b612_project_team3/team/view/chat_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class GroupTile extends StatefulWidget {
   final String userName;
@@ -20,7 +22,14 @@ class _GroupTileState extends State<GroupTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //Dio를 이용하여 chatpage로 이동
+        // 여러 값을 Map으로 그룹화하여 전달
+        final Map<String, String> chatDetails = {
+          'groupId': widget.groupId,
+          'groupName': widget.groupName,
+          'userName': widget.userName,
+        };
+
+        context.push('/chat', extra: chatDetails);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(

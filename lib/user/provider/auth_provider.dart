@@ -1,3 +1,4 @@
+import 'package:b612_project_team3/common/const/data.dart';
 import 'package:b612_project_team3/common/model/permission_model.dart';
 import 'package:b612_project_team3/common/provider/permission_provider.dart';
 import 'package:b612_project_team3/common/view/check_permission_screen.dart';
@@ -5,6 +6,8 @@ import 'package:b612_project_team3/common/view/root_tab.dart';
 import 'package:b612_project_team3/common/view/splash_screen.dart';
 import 'package:b612_project_team3/navigation/view/drive_done_screen.dart';
 import 'package:b612_project_team3/navigation/view/navigation_detail_screen.dart';
+import 'package:b612_project_team3/team/view/chat_page.dart';
+import 'package:b612_project_team3/team/view/group_info.dart';
 import 'package:b612_project_team3/user/model/user_model.dart';
 import 'package:b612_project_team3/user/provider/user_info_provider.dart';
 import 'package:b612_project_team3/user/view/login_screen.dart';
@@ -78,6 +81,35 @@ class AuthProvider extends ChangeNotifier {
           name: DriveDoneScreen.routeName,
           builder: (_, __) => const DriveDoneScreen(),
         ),
+        GoRoute(
+          path: '/chat',
+          name: ChatPage.routeName,
+          builder: (BuildContext context, GoRouterState state) {
+            // extra에서 Map으로 값을 추출
+            final Map<String, String> chatDetails =
+                state.extra as Map<String, String>;
+            final String groupId = chatDetails['groupId']!;
+            final String groupName = chatDetails['groupName']!;
+            final String userName = chatDetails['userName']!;
+
+            return ChatPage(
+                groupId: groupId, groupName: groupName, userName: userName);
+          },
+        ),
+        GoRoute(
+          path: '/groupinfo',
+          name: GroupInfo.routeName,
+          builder: (context, state) {
+            final Map<String, String> chatDetails =
+                state.extra as Map<String, String>;
+            final String groupId = chatDetails['groupId']!;
+            final String groupName = chatDetails['groupName']!;
+            final String adminName = chatDetails['adminName']!;
+
+            return GroupInfo(
+                groupId: groupId, groupName: groupName, adminName: adminName);
+          },
+        )
       ];
 
   void logout() {

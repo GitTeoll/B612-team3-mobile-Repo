@@ -1,3 +1,4 @@
+import 'package:b612_project_team3/team/view/group_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
@@ -62,5 +63,24 @@ class DatabaseService {
     Map<String, dynamic>? userData =
         userDocument.data() as Map<String, dynamic>?;
     return userData!['fullName'];
+  }
+
+  getChats(String groupId) async {
+    return groupCollection
+        .doc(groupId)
+        .collection("messages")
+        .orderBy("time")
+        .snapshots();
+  }
+
+  Future getGroupAdmin(String groupId) async {
+    DocumentReference d = groupCollection.doc(groupId);
+    DocumentSnapshot documentSnapshot = await d.get();
+
+    return documentSnapshot['admin'];
+  }
+
+  getGroupMembers(GroupId) async {
+    return groupCollection.doc(GroupId).snapshots();
   }
 }
