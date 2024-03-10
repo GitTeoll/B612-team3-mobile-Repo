@@ -37,6 +37,12 @@ class _GroupInfoState extends State<GroupInfo> {
     });
   }
 
+  String getAdminName(String name) {
+    return name.substring(
+      name.indexOf("_") + 1,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,11 +66,102 @@ class _GroupInfoState extends State<GroupInfo> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
+                color: Colors.cyan,
               ),
-            )
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Text(
+                      widget.groupName.substring(0, 1).toUpperCase(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 30,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Group : ${widget.groupName}",
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Text('Admin : ${getAdminName(widget.adminName)}'),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            memberList(),
           ],
         ),
       ),
     );
+  }
+
+  Widget memberList() {
+    return StreamBuilder(
+        stream: members,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data["members"] != null &&
+                snapshot.data["members"].length > 0) {
+              return ListView.builder(
+                itemCount: snapshot.data["members"].length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  String initial = getInitials(snapshot.data['members'][index]);
+                  return Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.cyan,
+                        child: Text(
+                          initial.toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        getAdminName(snapshot.data['members'][index]),
+                      ),
+                      // subtitle: Text(getId()),
+                    ),
+                  );
+                },
+              );
+            } else {
+              // 리스트가 비어 있거나 null일 경우
+              return const Center(
+                child: Text("No members found."),
+              );
+            }
+          } else {
+            // 데이터 로딩 중
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+  }
+
+  String getInitials(String name) {
+    // 이름의 첫 글자를 추출합니다.
+    return name.isNotEmpty
+        ? name.substring(name.indexOf("_") + 1, name.indexOf("_") + 2)
+        : '?';
   }
 }
