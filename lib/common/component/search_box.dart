@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 
-class SearchBox extends StatelessWidget {
-  final ValueChanged<String>? onChanged;
+class SearchBox extends StatefulWidget {
+  final String? hintText;
+  final Function(String) onFieldSubmitted;
+  final bool autofocus;
 
   const SearchBox({
-    required this.onChanged,
     super.key,
+    required this.onFieldSubmitted,
+    this.hintText,
+    this.autofocus = false,
   });
+
+  @override
+  State<SearchBox> createState() => _SearchBoxState();
+}
+
+class _SearchBoxState extends State<SearchBox> {
+  final controller = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +36,36 @@ class SearchBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: TextFormField(
-                onChanged: onChanged,
-                onTapOutside: (_) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                textInputAction: TextInputAction.search,
-                decoration: const InputDecoration(
-                  hintText: 'search',
-                  hintStyle: TextStyle(color: Colors.grey),
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 0.0,
-                    horizontal: 4.0,
+              child: Form(
+                key: formKey,
+                child: TextFormField(
+                  autofocus: widget.autofocus,
+                  controller: controller,
+                  onTapOutside: (_) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  onFieldSubmitted: widget.onFieldSubmitted,
+                  textInputAction: TextInputAction.search,
+                  style: const TextStyle(decorationThickness: 0),
+                  decoration: InputDecoration(
+                    hintText: widget.hintText ?? 'search',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 0.0,
+                      horizontal: 4.0,
+                    ),
+                    border: InputBorder.none,
                   ),
-                  border: InputBorder.none,
                 ),
               ),
             ),
-            const Icon(Icons.search_rounded),
+            IconButton(
+              icon: const Icon(Icons.search_rounded),
+              onPressed: () {
+                widget.onFieldSubmitted(controller.text);
+              },
+            ),
           ],
         ),
       ),

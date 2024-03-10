@@ -29,7 +29,7 @@ class CourseScreen extends StatelessWidget {
                     height: 8.0,
                   ),
                   SearchBox(
-                    onChanged: (value) {},
+                    onFieldSubmitted: (value) {},
                   ),
                   const SizedBox(
                     height: 16.0,

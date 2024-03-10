@@ -1,3 +1,4 @@
+import 'package:b612_project_team3/common/component/register_text_form_field.dart';
 import 'package:b612_project_team3/common/const/colors.dart';
 import 'package:b612_project_team3/common/layout/default_layout.dart';
 import 'package:b612_project_team3/common/view/address_searching_screen.dart';
@@ -8,13 +9,6 @@ import 'package:daum_postcode_search/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-const _customoutlineInputBorder = OutlineInputBorder(
-  borderSide: BorderSide(color: Colors.grey),
-  borderRadius: BorderRadius.all(
-    Radius.circular(16.0),
-  ),
-);
 
 class RegisterScreen extends ConsumerStatefulWidget {
   static String get routeName => 'register';
@@ -241,58 +235,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class RegisterTextFormField extends StatelessWidget {
-  final ValueKey valueKey;
-  final String? Function(String?) validator;
-  final void Function(String?) onSaved;
-  final String? hintText;
-  final List<TextInputFormatter>? inputFormatters;
-  final TextInputType? keyboardType;
-  final bool readOnly;
-  final bool filled;
-  final TextEditingController? textEditingController;
-
-  const RegisterTextFormField({
-    super.key,
-    required this.valueKey,
-    required this.validator,
-    required this.onSaved,
-    this.hintText,
-    this.inputFormatters,
-    this.keyboardType,
-    this.readOnly = false,
-    this.filled = false,
-    this.textEditingController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      key: valueKey,
-      validator: validator,
-      onSaved: onSaved,
-      inputFormatters: inputFormatters,
-      keyboardType: keyboardType,
-      readOnly: readOnly,
-      onTapOutside: (_) {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      controller: textEditingController,
-      decoration: InputDecoration(
-        enabledBorder: _customoutlineInputBorder,
-        focusedBorder: _customoutlineInputBorder,
-        errorBorder: _customoutlineInputBorder,
-        focusedErrorBorder: _customoutlineInputBorder,
-        hintText: hintText,
-        hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-        fillColor: Colors.grey.shade300,
-        filled: filled,
       ),
     );
   }

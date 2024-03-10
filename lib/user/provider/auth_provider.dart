@@ -5,6 +5,8 @@ import 'package:b612_project_team3/common/view/root_tab.dart';
 import 'package:b612_project_team3/common/view/splash_screen.dart';
 import 'package:b612_project_team3/navigation/view/drive_done_screen.dart';
 import 'package:b612_project_team3/navigation/view/navigation_detail_screen.dart';
+import 'package:b612_project_team3/team/view/add_new_team_screen.dart';
+import 'package:b612_project_team3/team/view/search_team_screen.dart';
 import 'package:b612_project_team3/user/model/user_model.dart';
 import 'package:b612_project_team3/user/provider/user_info_provider.dart';
 import 'package:b612_project_team3/user/view/login_screen.dart';
@@ -47,6 +49,18 @@ class AuthProvider extends ChangeNotifier {
           path: '/',
           name: RootTab.routeName,
           builder: (_, __) => const RootTab(),
+          routes: [
+            GoRoute(
+              path: 'addnewteam',
+              name: AddNewTeamScreen.routeName,
+              builder: (_, __) => const AddNewTeamScreen(),
+            ),
+            GoRoute(
+              path: 'searchteam',
+              name: SearchTeamScreen.routeName,
+              builder: (_, __) => const SearchTeamScreen(),
+            ),
+          ],
         ),
         GoRoute(
           path: '/splash',
