@@ -34,8 +34,6 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
     if (ref.read(teamProvider.notifier).hasMore &&
         !lock &&
         controller.offset > controller.position.maxScrollExtent - 300) {
-      print('리슨');
-
       lock = true;
       await ref.read(teamProvider.notifier).getCurrentTeamInfoPaginate();
       lock = false;

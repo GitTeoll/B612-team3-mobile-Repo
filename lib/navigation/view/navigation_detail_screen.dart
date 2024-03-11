@@ -11,7 +11,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class NavigationDetailScreen extends ConsumerWidget {
   static String get routeName => 'navigation';
 
-  const NavigationDetailScreen({super.key});
+  const NavigationDetailScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,6 +63,7 @@ class NavigationDetailScreen extends ConsumerWidget {
                     width: 6,
                   ),
                 },
+                markers: currentRecordModel.markers,
                 myLocationEnabled: true,
               ),
             ),

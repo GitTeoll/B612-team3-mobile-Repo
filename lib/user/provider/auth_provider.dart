@@ -7,6 +7,7 @@ import 'package:b612_project_team3/navigation/view/drive_done_screen.dart';
 import 'package:b612_project_team3/navigation/view/navigation_detail_screen.dart';
 import 'package:b612_project_team3/team/view/add_new_team_screen.dart';
 import 'package:b612_project_team3/team/view/search_team_screen.dart';
+import 'package:b612_project_team3/team/view/select_team_screen.dart';
 import 'package:b612_project_team3/user/model/user_model.dart';
 import 'package:b612_project_team3/user/provider/user_info_provider.dart';
 import 'package:b612_project_team3/user/view/login_screen.dart';
@@ -91,6 +92,11 @@ class AuthProvider extends ChangeNotifier {
           path: '/drivedone',
           name: DriveDoneScreen.routeName,
           builder: (_, __) => const DriveDoneScreen(),
+        ),
+        GoRoute(
+          path: '/selectteam',
+          name: SelectTeamScreen.routeName,
+          builder: (_, __) => const SelectTeamScreen(),
         ),
       ];
 

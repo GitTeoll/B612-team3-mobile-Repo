@@ -1,8 +1,11 @@
+import 'package:b612_project_team3/common/const/data.dart';
 import 'package:b612_project_team3/common/model/cursor_pagination_model.dart';
 import 'package:b612_project_team3/team/model/team_model.dart';
 import 'package:b612_project_team3/team/repository/team_repository.dart';
 import 'package:b612_project_team3/user/repository/user_info_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final selectedTeamProvider = StateProvider<String>((ref) => SOLO);
 
 final teamProvider =
     StateNotifierProvider<TeamStateNotifier, CursorPaginationBase>((ref) {

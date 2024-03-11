@@ -1,25 +1,40 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:b612_project_team3/common/const/data.dart';
 import 'package:b612_project_team3/common/utils/data_utils.dart';
 import 'package:b612_project_team3/record/model/record_model.dart';
 import 'package:b612_project_team3/record/provider/drive_done_record_model_provider.dart';
+import 'package:b612_project_team3/team/provider/team_provider.dart';
+import 'package:b612_project_team3/user/model/user_model.dart';
+import 'package:b612_project_team3/user/provider/user_info_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 final currentRecordModelProvider = StateNotifierProvider.autoDispose<
     CurrentRecordModelStateNotifier, RecordModelBase>(
-  (ref) => CurrentRecordModelStateNotifier(ref),
+  (ref) {
+    final userID = (ref.read(userInfoProvider) as UserModel).name;
+    final teamName = ref.read(selectedTeamProvider);
+
+    return CurrentRecordModelStateNotifier(ref, userID, teamName);
+  },
 );
 
 class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   final Ref _ref;
+  final String userID;
+  final String teamName;
   StreamSubscription<Position>? _positionStreamSubscription;
+  StreamSubscription? _webSocketStreamSubscription;
   Timer? _timer;
+  WebSocketChannel? _channel;
   late LocationSettings locationSettings;
   late DateTime _startTime;
   late double _minLat;
@@ -31,10 +46,53 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   double? initialBearing;
   GoogleMapController? googleMapController;
 
-  CurrentRecordModelStateNotifier(this._ref)
+  CurrentRecordModelStateNotifier(this._ref, this.userID, this.teamName)
       : _latlngList = [],
         super(RecordModelLoading()) {
+    if (teamName != SOLO) {
+      _connectWebSocket();
+    }
     _startPositionTracking();
+  }
+
+  void _connectWebSocket() {
+    _channel = WebSocketChannel.connect(Uri.parse('ws://$ip/ws'));
+    _webSocketStreamSubscription = _channel!.stream.listen(_webSocketListener);
+  }
+
+  void _webSocketListener(event) {
+    if (state is! CurrentRecordModel || event == null) {
+      return;
+    }
+
+    final resp = jsonDecode(event);
+
+    if (resp is! List) {
+      print('웹소켓 수신 메시지가 잘못되었습니다.');
+      return;
+    }
+
+    final markers = <Marker>{};
+
+    for (Map<String, dynamic> e in resp) {
+      final String id = e['id'];
+      final double lat = e['locate1'];
+      final double lng = e['locate2'];
+
+      if (id == userID) {
+        continue;
+      }
+
+      markers.add(
+        Marker(
+          markerId: MarkerId(id),
+          position: LatLng(lat, lng),
+        ),
+      );
+    }
+    print(markers);
+
+    state = (state as CurrentRecordModel).copywith(markers: markers);
   }
 
   void _startPositionTracking() async {
@@ -127,6 +185,11 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
       return;
     }
 
+    if (teamName != SOLO) {
+      await _webSocketStreamSubscription?.cancel();
+      await _channel?.sink.close();
+    }
+
     _driveDone = true;
 
     _timer?.cancel();
@@ -184,6 +247,17 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   }
 
   void _positionListener(Position position) {
+    if (teamName != SOLO) {
+      final payLoad = jsonEncode({
+        'id': userID,
+        'team': teamName,
+        'locate1': DataUtils.decimalPointFix(position.latitude, 6),
+        'locate2': DataUtils.decimalPointFix(position.longitude, 6),
+      });
+
+      _channel?.sink.add(payLoad);
+    }
+
     final curLatLng = LatLng(position.latitude, position.longitude);
 
     // 아직 위치 정보가 하나도 없는 상태면
@@ -198,9 +272,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
       initialBearing = position.heading;
 
       state = CurrentRecordModel(
-        curPosition: position,
-        polylineCoordinates: [curLatLng],
-      );
+          curPosition: position, polylineCoordinates: [curLatLng], markers: {});
 
       startTimer();
       return;

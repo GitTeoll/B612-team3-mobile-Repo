@@ -19,6 +19,7 @@ class RecordModelError extends RecordModelBase {
 class CurrentRecordModel extends RecordModelBase {
   final Position curPosition;
   final List<LatLng> polylineCoordinates;
+  final Set<Marker> markers;
   final int elapsedTime; // sec
   final double totalTravelDistance; // km
   final bool isStopped;
@@ -26,6 +27,7 @@ class CurrentRecordModel extends RecordModelBase {
   CurrentRecordModel({
     required this.curPosition,
     required this.polylineCoordinates,
+    required this.markers,
     this.totalTravelDistance = 0,
     this.elapsedTime = 0,
     this.isStopped = false,
@@ -34,6 +36,7 @@ class CurrentRecordModel extends RecordModelBase {
   CurrentRecordModel copywith({
     Position? curPosition,
     List<LatLng>? polylineCoordinates,
+    Set<Marker>? markers,
     int? elapsedTime,
     double? totalTravelDistance,
     bool? isStopped,
@@ -41,6 +44,7 @@ class CurrentRecordModel extends RecordModelBase {
     return CurrentRecordModel(
       curPosition: curPosition ?? this.curPosition,
       polylineCoordinates: polylineCoordinates ?? this.polylineCoordinates,
+      markers: markers ?? this.markers,
       elapsedTime: elapsedTime ?? this.elapsedTime,
       totalTravelDistance: totalTravelDistance ?? this.totalTravelDistance,
       isStopped: isStopped ?? this.isStopped,
