@@ -94,7 +94,7 @@ class AuthProvider extends ChangeNotifier {
         ),
       ];
 
-  void logout() {
+  void logout() async {
     ref.read(userInfoProvider.notifier).logout();
   }
 
@@ -140,11 +140,14 @@ class AuthProvider extends ChangeNotifier {
       if (user.address == null || user.age == null || user.gender == null) {
         return '/register';
       }
-      return logginIn ||
-              state.fullPath == '/splash' ||
-              state.fullPath == '/register'
-          ? '/'
-          : null;
+
+      if (logginIn ||
+          state.fullPath == '/splash' ||
+          state.fullPath == '/register') {
+        return '/';
+      } else {
+        return null;
+      }
     }
 
     // UserModelError

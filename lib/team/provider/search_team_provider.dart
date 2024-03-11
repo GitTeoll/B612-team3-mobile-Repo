@@ -20,8 +20,8 @@ class SearchTeamStateNotifier extends StateNotifier<CursorPaginationBase> {
   final TeamRepository teamRepository;
   final String kind;
   final String keyword;
+  final size = 10;
   int page = 0;
-  int size = 10;
   bool hasMore = true;
 
   SearchTeamStateNotifier({

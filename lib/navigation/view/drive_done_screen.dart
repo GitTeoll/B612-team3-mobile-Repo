@@ -32,21 +32,24 @@ class DriveDoneScreen extends ConsumerWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: '코스 이름',
-                hintStyle: const TextStyle(color: Colors.grey),
-                contentPadding: const EdgeInsets.all(16.0),
-                border: outlineInputBorder,
-                focusedBorder: outlineInputBorder,
-                enabledBorder: outlineInputBorder,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: '코스 이름',
+                  hintStyle: const TextStyle(color: Colors.grey),
+                  contentPadding: const EdgeInsets.all(16.0),
+                  border: outlineInputBorder,
+                  focusedBorder: outlineInputBorder,
+                  enabledBorder: outlineInputBorder,
+                ),
+                onChanged: (value) {
+                  driveDoneRecordModel.name = value;
+                },
+                onTapOutside: (_) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
               ),
-              onChanged: (value) {
-                driveDoneRecordModel.name = value;
-              },
-              onTapOutside: (_) {
-                FocusManager.instance.primaryFocus?.unfocus();
-              },
             ),
             Padding(
               padding:

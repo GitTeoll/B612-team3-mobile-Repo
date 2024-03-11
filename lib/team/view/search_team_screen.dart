@@ -4,8 +4,10 @@ import 'package:b612_project_team3/common/model/cursor_pagination_model.dart';
 import 'package:b612_project_team3/team/component/team_card.dart';
 import 'package:b612_project_team3/team/model/team_model.dart';
 import 'package:b612_project_team3/team/provider/search_team_provider.dart';
+import 'package:b612_project_team3/team/provider/team_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class SearchTeamScreen extends ConsumerStatefulWidget {
   static String get routeName => 'searchteam';
@@ -56,6 +58,8 @@ class _SearchTeamScreenState extends ConsumerState<SearchTeamScreen> {
       keyword = value;
     });
   }
+
+  void onCardTab() {}
 
   @override
   Widget build(BuildContext context) {
@@ -152,11 +156,66 @@ class _SearchTeamScreenState extends ConsumerState<SearchTeamScreen> {
                     return Center(
                       child: cp is CursorPaginationFetchingMore
                           ? const CircularProgressIndicator()
-                          : const SizedBox(),
+                          : const Text('마지막 데이터입니다.'),
                     );
                   }
 
-                  return TeamCard(teamModel: cp.data[index]);
+                  return TeamCard(
+                    teamModel: cp.data[index],
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content:
+                                Text("'${cp.data[index].name}' 에 가입하시겠습니까?"),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  bool commit = false;
+
+                                  if (await ref
+                                      .read(teamProvider.notifier)
+                                      .joinTeam(
+                                        JoinTeamModel(
+                                          name: cp.data[index].name,
+                                          joinedAt:
+                                              DateTime.now().toIso8601String(),
+                                        ),
+                                      )) {
+                                    commit = true;
+                                  }
+
+                                  context.pop();
+
+                                  AlertDialog(
+                                    content: Text(commit
+                                        ? '가입이 완료되었습니다.'
+                                        : '오류가 발생했습니다.'),
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          context.pop();
+                                        },
+                                        child: const Text('확인'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                                child: const Text("예"),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.pop();
+                                },
+                                child: const Text("아니요"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  );
                 },
                 separatorBuilder: (_, __) => const SizedBox(height: 16.0),
                 itemCount:

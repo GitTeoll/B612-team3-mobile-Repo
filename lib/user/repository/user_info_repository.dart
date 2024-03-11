@@ -1,5 +1,6 @@
 import 'package:b612_project_team3/common/const/data.dart';
 import 'package:b612_project_team3/common/dio/dio.dart';
+import 'package:b612_project_team3/team/model/team_model.dart';
 import 'package:b612_project_team3/user/model/user_model.dart';
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +26,15 @@ abstract class UserInfoRepository {
     'accessToken': 'true',
   })
   Future<UserModel> getInfo();
+
+  @GET('/team')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<List<TeamModel>> getTeam({
+    @Query('page') required int page,
+    @Query('size') required int size,
+  });
 
   @POST('/edit')
   @Headers({

@@ -46,7 +46,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      title: '자전거 주행 앱?',
+      title: 'B612 Team3 Project',
       drawer: const CustomDrawer(),
       bottomNavigationBar: BottomNavigationBar(
         selectedFontSize: 12,
