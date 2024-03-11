@@ -107,18 +107,18 @@ class _TeamScreenState extends State<TeamScreen> {
               if (snapshot.data['groups'].length != 0) {
                 return Flexible(
                   child: ListView.builder(
-                      itemCount: snapshot.data['groups'].length,
-                      itemBuilder: (context, index) {
-                        //최근 생성 그룹이 위로 향하게 하는 index 값
-                        int reverseIndex =
-                            snapshot.data['groups'].length - index - 1;
-                        return GroupTile(
-                            userName: snapshot.data['fullName'],
-                            groupId:
-                                getId(snapshot.data['groups'][reverseIndex]),
-                            groupName:
-                                getName(snapshot.data['groups'][reverseIndex]));
-                      }),
+                    itemCount: snapshot.data['groups'].length,
+                    itemBuilder: (context, index) {
+                      //최근 생성 그룹이 위로 향하게 하는 index 값
+                      int reverseIndex =
+                          snapshot.data['groups'].length - index - 1;
+                      return GroupTile(
+                          groupId: getId(snapshot.data['groups'][reverseIndex]),
+                          groupName:
+                              getName(snapshot.data['groups'][reverseIndex]),
+                          userName: snapshot.data['fullName']);
+                    },
+                  ),
                 );
               }
               //데이터가 존재하고 null도 아니지만 길이가 0인경우(존재하지 않음)

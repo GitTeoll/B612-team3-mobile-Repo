@@ -18,6 +18,9 @@ class DatabaseService {
       "groups": [],
       "profilePic": "",
       "uid ": uid,
+      // "gender" : gender,
+      // "address" : address,
+      // "age" : age
     });
   }
 

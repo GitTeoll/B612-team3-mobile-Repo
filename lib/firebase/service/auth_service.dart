@@ -1,3 +1,4 @@
+import 'package:b612_project_team3/common/view/address_searching_screen.dart';
 import 'package:b612_project_team3/firebase/firebase_auth_remote_data_source.dart';
 import 'package:b612_project_team3/firebase/service/database_service.dart';
 import 'package:b612_project_team3/user/model/user_model.dart';
@@ -13,13 +14,18 @@ class firebaseAuthService {
 
   String email = 'null@null.com';
 
-  Future firebaseLogin(String userName) async {
+  Future firebaseLogin(
+      String userName, String? gender, int? age, String? address) async {
     final user = await UserApi.instance.me();
     print("uid = ${user.id.toString()}");
 
     //firebase token으로 로그인 진행
     final token = await _firebaseAuthDataSource.createCustomToken({
       'uid': user.id.toString(),
+      'userName': userName.toString(),
+      'gender': gender.toString(),
+      'age': age,
+      'address': address.toString(),
       // 'displayName': user!.kakaoAccount!.profile!.nickname,
       // 'email': user!.kakaoAccount!.email!,
       // 'photoURL': user!.kakaoAccount!.profile!.profileImageUrl!,
@@ -31,7 +37,7 @@ class firebaseAuthService {
     await DatabaseService(uid: 'kakao:${user.id}')
         .updateUserData(userName, email);
 
-    print('카카오계정으로 로그인 성공');
+    print('파이어베이스에서 카카오계정으로 로그인 성공');
   }
 
   // // 사용자 정보를 가져오는 메소드

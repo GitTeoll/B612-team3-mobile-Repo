@@ -84,7 +84,8 @@ class UserInfoStateNotifier extends StateNotifier<UserModelBase?> {
 
       final userResp = await repository.getInfo();
       //firebase 로그인
-      firebaseAuthService().firebaseLogin(userResp.name);
+      firebaseAuthService().firebaseLogin(
+          userResp.name, userResp.gender, userResp.age, userResp.address);
 
       state = userResp;
 
