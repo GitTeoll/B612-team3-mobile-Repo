@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SearchBox extends StatelessWidget {
   final ValueChanged<String>? onChanged;
@@ -28,6 +29,9 @@ class SearchBox extends StatelessWidget {
                 onChanged: onChanged,
                 onTapOutside: (_) {
                   FocusManager.instance.primaryFocus?.unfocus();
+                },
+                onTap: () {
+                  context.push('/groupsearch');
                 },
                 textInputAction: TextInputAction.search,
                 decoration: const InputDecoration(

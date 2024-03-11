@@ -77,8 +77,11 @@ class _TeamScreenState extends State<TeamScreen> {
             ),
           ),
           Container(
-              margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: const SearchBox(onChanged: _handleSearchChanged)),
+            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+            child: const SearchBox(
+              onChanged: _handleSearchChanged,
+            ),
+          ),
           const SizedBox(
             height: 50,
           ),

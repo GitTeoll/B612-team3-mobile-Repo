@@ -1,6 +1,7 @@
 import 'package:b612_project_team3/firebase/service/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class GroupInfo extends StatefulWidget {
   static String get routeName => 'groupinfo';
@@ -20,11 +21,20 @@ class GroupInfo extends StatefulWidget {
 
 class _GroupInfoState extends State<GroupInfo> {
   Stream? members;
+  late Future<String> userName;
   @override
   void initState() {
     // TODO: implement initState
     getMembers();
+    initUserName();
     super.initState();
+  }
+
+  void initUserName() {
+    // 현재 로그인한 사용자의 UID를 사용하여 DatabaseService 인스턴스를 생성
+    var dbService =
+        DatabaseService(uid: FirebaseAuth.instance.currentUser?.uid);
+    userName = dbService.getUserFullName(); // 인스턴스를 통해 getUserFullName에 접근
   }
 
   getMembers() async {
@@ -53,7 +63,14 @@ class _GroupInfoState extends State<GroupInfo> {
         title: const Text("Group Info"),
         actions: [
           IconButton(
-            onPressed: () {},
+            //탈퇴시 홈페이지로 이동
+            onPressed: () async {
+              DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+                  .toggleGroupJoin(widget.groupId, userName, widget.groupName)
+                  .whenComplete(() {
+                context.go('/');
+              });
+            },
             icon: const Icon(Icons.exit_to_app),
           )
         ],

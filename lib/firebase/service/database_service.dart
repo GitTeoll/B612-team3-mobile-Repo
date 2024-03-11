@@ -37,7 +37,7 @@ class DatabaseService {
           "${id}_$userName", // userName이 겹칠 수 도 있으므로 설정함. 중복되지 않는다면 userName으로 설정
       "members": [],
       "groupID": "",
-      "recentMesseage": "",
+      "recentMessage": "",
       "recentMessageSender": "",
     });
 
@@ -82,5 +82,60 @@ class DatabaseService {
 
   getGroupMembers(GroupId) async {
     return groupCollection.doc(GroupId).snapshots();
+  }
+
+  //검색
+  searchByName(String groupName) {
+    return groupCollection.where("groupName", isEqualTo: groupName).get();
+  }
+
+  //그룹에 존재하는지 bool값 반환
+  Future<bool> isUserJoined(
+      String groupName, String groupID, Future<String> userName) async {
+    DocumentReference userDocumenrReference = userCollection.doc(uid);
+    DocumentSnapshot documentSnapshot = await userDocumenrReference.get();
+
+    List<dynamic> groups = await documentSnapshot['groups'];
+    if (groups.contains("${groupID}_$groupName")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //그룹 가입 나가기 버튼 기능 구현
+  Future toggleGroupJoin(
+      String groupId, Future<String> userName, String groupName) async {
+    DocumentReference userDocumenrReference = userCollection.doc(uid);
+    DocumentReference groupdocumentReference = groupCollection.doc(groupId);
+
+    DocumentSnapshot documentSnapshot = await userDocumenrReference.get();
+    List<dynamic> groups = await documentSnapshot['groups'];
+
+    if (groups.contains("${groupId}_$groupName")) {
+      await userDocumenrReference.update({
+        "groups": FieldValue.arrayRemove(["${groupId}_$groupName"])
+      });
+      await userDocumenrReference.update({
+        "members": FieldValue.arrayRemove(["${uid}_$userName"])
+      });
+    } else {
+      await userDocumenrReference.update({
+        "groups": FieldValue.arrayUnion(["${groupId}_$groupName"])
+      });
+      await userDocumenrReference.update({
+        "members": FieldValue.arrayUnion(["${uid}_$userName"])
+      });
+    }
+  }
+
+  //메세지 보내기
+  sendMessage(String groupId, Map<String, dynamic> chatMessageData) async {
+    groupCollection.doc(groupId).collection('messages').add(chatMessageData);
+    groupCollection.doc(groupId).update({
+      "recentMessage": chatMessageData['message'],
+      "recentMessageSender": chatMessageData['sender'],
+      "recentMessageTime": chatMessageData['time'].toString(),
+    });
   }
 }

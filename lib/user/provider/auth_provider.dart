@@ -8,6 +8,7 @@ import 'package:b612_project_team3/navigation/view/drive_done_screen.dart';
 import 'package:b612_project_team3/navigation/view/navigation_detail_screen.dart';
 import 'package:b612_project_team3/team/view/chat_page.dart';
 import 'package:b612_project_team3/team/view/group_info.dart';
+import 'package:b612_project_team3/team/view/search_page.dart';
 import 'package:b612_project_team3/user/model/user_model.dart';
 import 'package:b612_project_team3/user/provider/user_info_provider.dart';
 import 'package:b612_project_team3/user/view/login_screen.dart';
@@ -109,7 +110,12 @@ class AuthProvider extends ChangeNotifier {
             return GroupInfo(
                 groupId: groupId, groupName: groupName, adminName: adminName);
           },
-        )
+        ),
+        GoRoute(
+          path: '/groupsearch',
+          name: SearchPage.routeName,
+          builder: (_, __) => const SearchPage(),
+        ),
       ];
 
   void logout() {
