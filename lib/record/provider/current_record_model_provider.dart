@@ -87,6 +87,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
         Marker(
           markerId: MarkerId(id),
           position: LatLng(lat, lng),
+          infoWindow: InfoWindow(title: id),
         ),
       );
     }
