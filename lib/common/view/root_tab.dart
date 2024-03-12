@@ -25,7 +25,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    controller = TabController(length: 5, vsync: this);
+    controller = TabController(length: 3, vsync: this);
 
     controller.addListener(tabListener);
   }
@@ -61,10 +61,10 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
             icon: Icon(Icons.home_outlined),
             label: '홈',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.directions_bike_outlined),
-            label: '주변코스',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.directions_bike_outlined),
+          //   label: '주변코스',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.location_on_outlined),
             label: '지도',
@@ -73,10 +73,10 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
             icon: Icon(Icons.groups_outlined),
             label: '팀',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.forum_outlined),
-            label: '게시판',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.forum_outlined),
+          //   label: '게시판',
+          // ),
         ],
       ),
       child: TabBarView(
@@ -84,10 +84,10 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         controller: controller,
         children: const [
           RecordScreen(),
-          CourseScreen(),
+          // CourseScreen(),
           GMapNavigationScreen(),
           TeamScreen(),
-          CommunityScreen(),
+          // CommunityScreen(),
         ],
       ),
     );

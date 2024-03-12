@@ -1,13 +1,53 @@
 import 'package:b612_project_team3/common/const/colors.dart';
+import 'package:b612_project_team3/common/const/data.dart';
+import 'package:b612_project_team3/common/utils/data_utils.dart';
+import 'package:b612_project_team3/record/model/record_model.dart';
 import 'package:flutter/material.dart';
+import 'package:google_static_maps_controller/google_static_maps_controller.dart';
 
 class RecentDriveWidget extends StatelessWidget {
+  final DriveDoneRecordModel driveDoneRecordModel;
+
   const RecentDriveWidget({
     super.key,
+    required this.driveDoneRecordModel,
   });
 
   @override
   Widget build(BuildContext context) {
+    final controller = StaticMapController(
+      googleApiKey: googleMapsApiKey,
+      width: 310,
+      height: 200,
+      language: 'ko',
+      markers: [
+        Marker(
+          label: 'S',
+          locations: [
+            GeocodedLocation.latLng(
+              driveDoneRecordModel.startLatLng.first,
+              driveDoneRecordModel.startLatLng.last,
+            )
+          ],
+        ),
+        Marker(
+          label: 'E',
+          locations: [
+            GeocodedLocation.latLng(
+              driveDoneRecordModel.endLatLng.first,
+              driveDoneRecordModel.endLatLng.last,
+            )
+          ],
+        ),
+      ],
+      paths: [
+        Path.encodedPolyline(
+          driveDoneRecordModel.encodedPolyline,
+          color: Colors.red,
+        ),
+      ],
+    );
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
       child: Container(
@@ -52,9 +92,9 @@ class RecentDriveWidget extends StatelessWidget {
               height: 8,
             ),
             //"Tect data"
-            const Row(
+            Row(
               children: [
-                Text("text data"),
+                Text(driveDoneRecordModel.name),
               ],
             ),
             const SizedBox(
@@ -62,11 +102,17 @@ class RecentDriveWidget extends StatelessWidget {
             ),
             //지도가 들어갈 container 설정
             Container(
+              clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.grey,
               ),
               height: MediaQuery.of(context).size.height * 0.25,
+              width: double.infinity,
+              child: Image(
+                image: controller.image,
+                fit: BoxFit.cover,
+              ),
               // width: MediaQuery.of(context).size.width * 0.75,
             ),
             const SizedBox(
@@ -74,7 +120,7 @@ class RecentDriveWidget extends StatelessWidget {
             ),
             //연두 도형 설정
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //죄측부터 타원 1
                 Container(
@@ -84,62 +130,67 @@ class RecentDriveWidget extends StatelessWidget {
                     color: PRIMARY_COLOR,
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "00:42:58",
-                      style: TextStyle(fontSize: 20),
+                      DataUtils.secToHHMMSS(
+                        driveDoneRecordModel.elapsedTime,
+                      ),
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ),
+                ),
+                const SizedBox(
+                  width: 8.0,
                 ),
                 //타원 2
                 Padding(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.20,
+                    width: MediaQuery.of(context).size.width * 0.25,
                     height: MediaQuery.of(context).size.height * 0.04,
                     decoration: BoxDecoration(
                       color: PRIMARY_COLOR,
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        "2.4km",
-                        style: TextStyle(fontSize: 20),
+                        '${driveDoneRecordModel.totalTravelDistance.toStringAsFixed(2)}km',
+                        style: const TextStyle(fontSize: 20),
                       ),
                     ),
                   ),
                 ),
                 //원 3
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.10,
-                  height: MediaQuery.of(context).size.height * 0.04,
-                  decoration: const BoxDecoration(
-                      color: PRIMARY_COLOR,
-                      // borderRadius: BorderRadius.circular(15),
-                      shape: BoxShape.circle),
-                  //원 내부 텍스트 설정
-                  // child: const Center(
-                  //     child: Text(
-                  //       "2.4km",
-                  //       style: TextStyle(fontSize: 20),
-                  //     ),
-                  //     ),
-                ),
-                //원 4 <원 3과 동일>
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.10,
-                  height: MediaQuery.of(context).size.height * 0.04,
-                  decoration: const BoxDecoration(
-                      color: PRIMARY_COLOR,
-                      // borderRadius: BorderRadius.circular(15),
-                      shape: BoxShape.circle),
-                  child: const Center(
-                      // child: Text(
-                      //   "2.4km",
-                      //   style: TextStyle(fontSize: 20),
-                      // ),
-                      ),
-                ),
+                // Container(
+                //   width: MediaQuery.of(context).size.width * 0.10,
+                //   height: MediaQuery.of(context).size.height * 0.04,
+                //   decoration: const BoxDecoration(
+                //       color: PRIMARY_COLOR,
+                //       // borderRadius: BorderRadius.circular(15),
+                //       shape: BoxShape.circle),
+                //   //원 내부 텍스트 설정
+                //   // child: const Center(
+                //   //     child: Text(
+                //   //       "2.4km",
+                //   //       style: TextStyle(fontSize: 20),
+                //   //     ),
+                //   //     ),
+                // ),
+                // //원 4 <원 3과 동일>
+                // Container(
+                //   width: MediaQuery.of(context).size.width * 0.10,
+                //   height: MediaQuery.of(context).size.height * 0.04,
+                //   decoration: const BoxDecoration(
+                //       color: PRIMARY_COLOR,
+                //       // borderRadius: BorderRadius.circular(15),
+                //       shape: BoxShape.circle),
+                //   child: const Center(
+                //       // child: Text(
+                //       //   "2.4km",
+                //       //   style: TextStyle(fontSize: 20),
+                //       // ),
+                //       ),
+                // ),
               ],
             ),
           ],

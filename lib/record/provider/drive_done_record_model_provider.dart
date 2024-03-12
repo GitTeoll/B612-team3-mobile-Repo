@@ -1,8 +1,8 @@
 import 'package:b612_project_team3/record/model/record_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final driveDoneRecordModelProvider = StateNotifierProvider.autoDispose<
-    DriveDoneRecordModelStateNotifier, RecordModelBase>(
+final driveDoneRecordModelProvider =
+    StateNotifierProvider<DriveDoneRecordModelStateNotifier, RecordModelBase>(
   (ref) {
     ref.onDispose(
       () {
