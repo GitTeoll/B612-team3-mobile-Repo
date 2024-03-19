@@ -86,7 +86,8 @@ class AuthProvider extends ChangeNotifier {
         GoRoute(
           path: '/navigation',
           name: NavigationDetailScreen.routeName,
-          builder: (_, __) => const NavigationDetailScreen(),
+          builder: (_, state) =>
+              NavigationDetailScreen(original: state.extra as bool),
         ),
         GoRoute(
           path: '/drivedone',

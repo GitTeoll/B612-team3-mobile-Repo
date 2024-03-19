@@ -9,11 +9,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class NavigationController extends StatelessWidget {
   final WidgetRef ref;
   final CurrentRecordModel currentRecordModel;
+  final bool original;
 
   const NavigationController({
     super.key,
     required this.ref,
     required this.currentRecordModel,
+    required this.original,
   });
 
   @override
@@ -35,11 +37,13 @@ class NavigationController extends StatelessWidget {
                     ref: ref,
                     currentRecordModel: currentRecordModel,
                     size: size,
+                    original: original,
                   )
                 : NavigationControllerWhenNotStopped(
                     ref: ref,
                     currentRecordModel: currentRecordModel,
                     size: size,
+                    original: original,
                   );
           },
         ),

@@ -69,7 +69,8 @@ class DriveDoneRecordModel extends RecordModelBase {
   int rating = 3;
   int difficulty = 3;
   String review = "";
-  bool publicCourse = false;
+  bool publicCourse;
+  bool original;
 
   DriveDoneRecordModel({
     required this.startTime,
@@ -83,7 +84,49 @@ class DriveDoneRecordModel extends RecordModelBase {
     required this.southwestLatLng,
     required this.northeastLatLng,
     required this.zoom,
+    this.publicCourse = false,
+    this.original = true,
   });
 
   Map<String, dynamic> toJson() => _$DriveDoneRecordModelToJson(this);
+}
+
+@JsonSerializable()
+class RecordModel extends RecordModelBase {
+  final int courseId;
+  final int reviewCount;
+  final int avgElapsedTime;
+  final double totalTravelDistance;
+  final double zoom;
+  final double avgRating;
+  final double avgDifficulty;
+  final bool publicCourse;
+  final bool original;
+  final String name;
+  final List<double> startLatLng;
+  final List<double> endLatLng;
+  final List<double> centerLatLng;
+  final List<double> southwestLatLng;
+  final List<double> northeastLatLng;
+
+  RecordModel({
+    required this.courseId,
+    required this.reviewCount,
+    required this.avgElapsedTime,
+    required this.totalTravelDistance,
+    required this.zoom,
+    required this.avgRating,
+    required this.avgDifficulty,
+    required this.publicCourse,
+    required this.original,
+    required this.name,
+    required this.startLatLng,
+    required this.endLatLng,
+    required this.centerLatLng,
+    required this.southwestLatLng,
+    required this.northeastLatLng,
+  });
+
+  factory RecordModel.fromJson(Map<String, dynamic> json) =>
+      _$RecordModelFromJson(json);
 }

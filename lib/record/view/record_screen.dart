@@ -1,7 +1,6 @@
+import 'package:b612_project_team3/record/component/driving_records.dart';
+import 'package:b612_project_team3/record/component/recent_drive_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../widgets/driving_records.dart';
-import '../widgets/recent_drive_widget.dart';
 
 class RecordScreen extends StatelessWidget {
   const RecordScreen({super.key});

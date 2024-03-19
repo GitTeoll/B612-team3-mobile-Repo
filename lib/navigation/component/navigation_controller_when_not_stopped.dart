@@ -10,12 +10,14 @@ class NavigationControllerWhenNotStopped extends StatelessWidget {
   final WidgetRef ref;
   final CurrentRecordModel currentRecordModel;
   final double size;
+  final bool original;
 
   const NavigationControllerWhenNotStopped({
     super.key,
     required this.ref,
     required this.currentRecordModel,
     required this.size,
+    required this.original,
   });
 
   @override
@@ -72,7 +74,9 @@ class NavigationControllerWhenNotStopped extends StatelessWidget {
                 size: size,
                 content: 'Stop!',
                 ontap: () {
-                  ref.read(currentRecordModelProvider.notifier).stopTimer();
+                  ref
+                      .read(currentRecordModelProvider(original).notifier)
+                      .stopTimer();
                 },
               ),
             ],

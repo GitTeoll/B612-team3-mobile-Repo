@@ -11,16 +11,20 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class NavigationDetailScreen extends ConsumerWidget {
   static String get routeName => 'navigation';
 
+  final bool original;
+
   const NavigationDetailScreen({
     super.key,
+    required this.original,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentRecordModel = ref.watch(currentRecordModelProvider);
+    final currentRecordModel = ref.watch(currentRecordModelProvider(original));
     final driveDoneRecordModel = ref.watch(driveDoneRecordModelProvider);
-    final googleMapController =
-        ref.watch(currentRecordModelProvider.notifier).googleMapController;
+    final googleMapController = ref
+        .watch(currentRecordModelProvider(original).notifier)
+        .googleMapController;
 
     if (currentRecordModel is! CurrentRecordModel ||
         driveDoneRecordModel is DriveDoneRecordModel) {
@@ -41,7 +45,7 @@ class NavigationDetailScreen extends ConsumerWidget {
               child: GoogleMap(
                 onMapCreated: (controller) {
                   ref
-                      .read(currentRecordModelProvider.notifier)
+                      .read(currentRecordModelProvider(original).notifier)
                       .startCameraTracking(controller);
                 },
                 initialCameraPosition: CameraPosition(
@@ -51,7 +55,7 @@ class NavigationDetailScreen extends ConsumerWidget {
                   ),
                   zoom: 17,
                   bearing: ref
-                          .read(currentRecordModelProvider.notifier)
+                          .read(currentRecordModelProvider(original).notifier)
                           .initialBearing ??
                       0.0,
                 ),
@@ -74,6 +78,7 @@ class NavigationDetailScreen extends ConsumerWidget {
                   ? NavigationController(
                       ref: ref,
                       currentRecordModel: currentRecordModel,
+                      original: original,
                     )
                   : const SizedBox(),
             ),

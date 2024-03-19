@@ -9,12 +9,14 @@ class NavigationControllerWhenStopped extends StatelessWidget {
   final WidgetRef ref;
   final CurrentRecordModel currentRecordModel;
   final double size;
+  final bool original;
 
   const NavigationControllerWhenStopped({
     super.key,
     required this.ref,
     required this.currentRecordModel,
     required this.size,
+    required this.original,
   });
 
   @override
@@ -44,7 +46,8 @@ class NavigationControllerWhenStopped extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () async {
                               await ref
-                                  .read(currentRecordModelProvider.notifier)
+                                  .read(currentRecordModelProvider(original)
+                                      .notifier)
                                   .stopPositionTracking();
 
                               if (totalTravelDistance >= 1.0) {
@@ -79,7 +82,9 @@ class NavigationControllerWhenStopped extends StatelessWidget {
                 size: size,
                 content: '계속',
                 ontap: () {
-                  ref.read(currentRecordModelProvider.notifier).startTimer();
+                  ref
+                      .read(currentRecordModelProvider(original).notifier)
+                      .startTimer();
                 },
               ),
             ],

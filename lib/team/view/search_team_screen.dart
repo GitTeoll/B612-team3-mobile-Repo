@@ -24,6 +24,7 @@ class _SearchTeamScreenState extends ConsumerState<SearchTeamScreen> {
   String filter = 'name';
   String? keyword;
   bool lock = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -162,8 +163,10 @@ class _SearchTeamScreenState extends ConsumerState<SearchTeamScreen> {
 
                   return TeamCard(
                     teamModel: cp.data[index],
-                    onTap: () {
-                      showDialog(
+                    onTap: () async {
+                      bool? commit;
+
+                      await showDialog(
                         context: context,
                         builder: (context) {
                           return AlertDialog(
@@ -172,7 +175,22 @@ class _SearchTeamScreenState extends ConsumerState<SearchTeamScreen> {
                             actions: [
                               ElevatedButton(
                                 onPressed: () async {
-                                  bool commit = false;
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) => const AlertDialog(
+                                      title: Center(child: Text('가입중')),
+                                      actions: [
+                                        Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ],
+                                    ),
+                                  );
 
                                   if (await ref
                                       .read(teamProvider.notifier)
@@ -184,23 +202,16 @@ class _SearchTeamScreenState extends ConsumerState<SearchTeamScreen> {
                                         ),
                                       )) {
                                     commit = true;
+                                  } else {
+                                    commit = false;
                                   }
 
-                                  context.pop();
+                                  setState(() {
+                                    isLoading = false;
+                                  });
 
-                                  AlertDialog(
-                                    content: Text(commit
-                                        ? '가입이 완료되었습니다.'
-                                        : '오류가 발생했습니다.'),
-                                    actions: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          context.pop();
-                                        },
-                                        child: const Text('확인'),
-                                      ),
-                                    ],
-                                  );
+                                  context.pop();
+                                  context.pop();
                                 },
                                 child: const Text("예"),
                               ),
@@ -214,6 +225,26 @@ class _SearchTeamScreenState extends ConsumerState<SearchTeamScreen> {
                           );
                         },
                       );
+
+                      if (commit != null) {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => AlertDialog(
+                            content: Text(commit!
+                                ? '가입이 완료되었습니다.'
+                                : '오류가 발생했습니다. 다시 시도해주세요.'),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.pop();
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     },
                   );
                 },

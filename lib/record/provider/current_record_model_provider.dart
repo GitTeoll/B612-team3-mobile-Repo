@@ -17,13 +17,13 @@ import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-final currentRecordModelProvider = StateNotifierProvider.autoDispose<
-    CurrentRecordModelStateNotifier, RecordModelBase>(
-  (ref) {
+final currentRecordModelProvider = StateNotifierProvider.family
+    .autoDispose<CurrentRecordModelStateNotifier, RecordModelBase, bool>(
+  (ref, original) {
     final userID = (ref.read(userInfoProvider) as UserModel).name;
     final teamName = ref.read(selectedTeamProvider);
 
-    return CurrentRecordModelStateNotifier(ref, userID, teamName);
+    return CurrentRecordModelStateNotifier(ref, userID, teamName, original);
   },
 );
 
@@ -31,6 +31,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   final Ref _ref;
   final String userID;
   final String teamName;
+  final bool original;
   StreamSubscription<Position>? _positionStreamSubscription;
   StreamSubscription? _webSocketStreamSubscription;
   Timer? _timer;
@@ -46,8 +47,12 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
   double? initialBearing;
   GoogleMapController? googleMapController;
 
-  CurrentRecordModelStateNotifier(this._ref, this.userID, this.teamName)
-      : _latlngList = [],
+  CurrentRecordModelStateNotifier(
+    this._ref,
+    this.userID,
+    this.teamName,
+    this.original,
+  )   : _latlngList = [],
         super(RecordModelLoading()) {
     if (teamName != SOLO) {
       _connectWebSocket();
@@ -222,6 +227,7 @@ class CurrentRecordModelStateNotifier extends StateNotifier<RecordModelBase> {
             northeastLatLng: [_maxLat, _maxLng],
             zoom: DataUtils.decimalPointFix(
                 await googleMapController!.getZoomLevel(), 6),
+            original: original,
           ),
         );
 
