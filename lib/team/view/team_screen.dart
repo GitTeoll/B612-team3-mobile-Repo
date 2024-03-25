@@ -14,7 +14,8 @@ class TeamScreen extends ConsumerStatefulWidget {
   ConsumerState<TeamScreen> createState() => _TeamScreenState();
 }
 
-class _TeamScreenState extends ConsumerState<TeamScreen> {
+class _TeamScreenState extends ConsumerState<TeamScreen>
+    with AutomaticKeepAliveClientMixin<TeamScreen> {
   final favoriteCardMaxCount = 5;
 
   final ScrollController controller = ScrollController();
@@ -22,6 +23,9 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
   late int favoriteCardCount;
   late int normalCardCount;
   bool lock = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -50,6 +54,8 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     final team = ref.watch(teamProvider);
 
     if (team is CursorPagination || team is CursorPaginationFetchingMore) {

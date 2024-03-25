@@ -69,6 +69,7 @@ class NavigationDetailScreen extends ConsumerWidget {
                 },
                 markers: currentRecordModel.markers,
                 myLocationEnabled: true,
+                zoomControlsEnabled: false,
               ),
             ),
             Flexible(

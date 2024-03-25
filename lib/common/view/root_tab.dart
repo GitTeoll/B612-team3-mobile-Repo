@@ -46,7 +46,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      title: 'B612 Team3 Project',
+      title: index == 1 || index == 2 ? null : 'B612 Team3 Project',
       drawer: const CustomDrawer(),
       bottomNavigationBar: BottomNavigationBar(
         selectedFontSize: 12,
@@ -62,12 +62,12 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
             label: '홈',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.directions_bike_outlined),
-            label: '주변코스',
+            icon: Icon(Icons.location_on_outlined),
+            label: '코스',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_on_outlined),
-            label: '지도',
+            icon: Icon(Icons.directions_bike_outlined),
+            label: '주행',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.groups_outlined),

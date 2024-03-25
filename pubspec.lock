@@ -637,14 +637,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
-  kakao_map_plugin:
-    dependency: "direct main"
-    description:
-      name: kakao_map_plugin
-      sha256: af88db7b123f73ed4f0588d70c495aa5b34c8494057c3df8d0a83ec5b415444a
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.4"
   lints:
     dependency: transitive
     description:
@@ -1122,38 +1114,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
-  webview_flutter:
-    dependency: transitive
-    description:
-      name: webview_flutter
-      sha256: "60e23976834e995c404c0b21d3b9db37ecd77d3303ef74f8b8d7a7b19947fc04"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.4.3"
-  webview_flutter_android:
-    dependency: transitive
-    description:
-      name: webview_flutter_android
-      sha256: "161af93c2abaf94ef2192bffb53a3658b2d721a3bf99b69aa1e47814ee18cc96"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.13.2"
-  webview_flutter_platform_interface:
-    dependency: transitive
-    description:
-      name: webview_flutter_platform_interface
-      sha256: dbe745ee459a16b6fec296f7565a8ef430d0d681001d8ae521898b9361854943
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.9.0"
-  webview_flutter_wkwebview:
-    dependency: transitive
-    description:
-      name: webview_flutter_wkwebview
-      sha256: "02d8f3ebbc842704b2b662377b3ee11c0f8f1bbaa8eab6398262f40049819160"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.10.1"
   win32:
     dependency: transitive
     description:

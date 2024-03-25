@@ -2,11 +2,22 @@ import 'package:b612_project_team3/record/component/driving_records.dart';
 import 'package:b612_project_team3/record/component/recent_drive_widget.dart';
 import 'package:flutter/material.dart';
 
-class RecordScreen extends StatelessWidget {
+class RecordScreen extends StatefulWidget {
   const RecordScreen({super.key});
 
   @override
+  State<RecordScreen> createState() => _RecordScreenState();
+}
+
+class _RecordScreenState extends State<RecordScreen>
+    with AutomaticKeepAliveClientMixin<RecordScreen> {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return SingleChildScrollView(
       child: Column(
         children: [

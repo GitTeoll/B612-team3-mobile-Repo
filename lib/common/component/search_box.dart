@@ -7,7 +7,7 @@ class SearchBox extends StatefulWidget {
 
   const SearchBox({
     super.key,
-    required this.onFieldSubmitted,
+    required this.onFieldSubmitted(String content),
     this.hintText,
     this.autofocus = false,
   });

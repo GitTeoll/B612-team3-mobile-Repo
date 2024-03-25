@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:b612_project_team3/common/const/data.dart';
-import 'package:b612_project_team3/common/layout/default_layout.dart';
 import 'package:b612_project_team3/navigation/component/action_button.dart';
 import 'package:b612_project_team3/team/provider/team_provider.dart';
 import 'package:flutter/material.dart';
@@ -10,112 +9,123 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class NavigationScreen extends ConsumerWidget {
+class NavigationScreen extends ConsumerStatefulWidget {
   const NavigationScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NavigationScreen> createState() => _NavigationScreenState();
+}
+
+class _NavigationScreenState extends ConsumerState<NavigationScreen>
+    with AutomaticKeepAliveClientMixin<NavigationScreen> {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
     final teamName = ref.watch(selectedTeamProvider);
 
-    return DefaultLayout(
-      child: FutureBuilder(
-        future: getCurrentPosition(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text('에러 발생'),
-            );
-          }
+    return FutureBuilder(
+      future: getCurrentPosition(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Center(
+            child: Text('에러 발생'),
+          );
+        }
 
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-          return Column(
-            children: [
-              Flexible(
-                flex: 4,
-                child: GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      snapshot.data!.latitude,
-                      snapshot.data!.longitude,
-                    ),
-                    zoom: 16,
+        return Column(
+          children: [
+            Flexible(
+              flex: 4,
+              child: GoogleMap(
+                padding: const EdgeInsets.only(top: 32.0),
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                    snapshot.data!.latitude,
+                    snapshot.data!.longitude,
                   ),
-                  myLocationEnabled: true,
+                  zoom: 17,
                 ),
+                myLocationEnabled: true,
+                zoomControlsEnabled: false,
               ),
-              Flexible(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final size =
-                          min(constraints.maxHeight, constraints.maxWidth);
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '현재 팀 : ${teamName == SOLO ? '솔로 라이딩' : teamName}',
-                              ),
-                              const SizedBox(
-                                height: 8.0,
-                              ),
-                              Row(
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      final resp =
-                                          await context.push('/selectteam');
+            ),
+            Flexible(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final size =
+                        min(constraints.maxHeight, constraints.maxWidth);
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '현재 팀 : ${teamName == SOLO ? '솔로 라이딩' : teamName}',
+                            ),
+                            const SizedBox(
+                              height: 8.0,
+                            ),
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    final resp =
+                                        await context.push('/selectteam');
 
-                                      if (resp is String) {
-                                        ref
-                                            .read(selectedTeamProvider.notifier)
-                                            .state = resp;
-                                      }
-                                    },
-                                    child: const Text('팀 선택'),
-                                  ),
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
+                                    if (resp is String) {
                                       ref
                                           .read(selectedTeamProvider.notifier)
-                                          .state = SOLO;
-                                    },
-                                    child: const Text('솔로 라이딩'),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          ActionButton(
-                            ontap: () {
-                              context.go('/navigation', extra: true);
-                            },
-                            size: size,
-                            content: 'Start!',
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                                          .state = resp;
+                                    }
+                                  },
+                                  child: const Text('팀 선택'),
+                                ),
+                                const SizedBox(
+                                  width: 8.0,
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    ref
+                                        .read(selectedTeamProvider.notifier)
+                                        .state = SOLO;
+                                  },
+                                  child: const Text('솔로 라이딩'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        ActionButton(
+                          ontap: () {
+                            context.go('/navigation', extra: true);
+                          },
+                          size: size,
+                          content: 'Start!',
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
-            ],
-          );
-        },
-      ),
+            ),
+          ],
+        );
+      },
     );
   }
 
