@@ -1,4 +1,5 @@
 import 'package:b612_project_team3/common/component/custom_drawer.dart';
+import 'package:b612_project_team3/common/component/custom_show_dialog.dart';
 import 'package:b612_project_team3/common/layout/default_layout.dart';
 import 'package:b612_project_team3/community/view/community_screen.dart';
 import 'package:b612_project_team3/course/view/coures_screen.dart';
@@ -45,50 +46,56 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultLayout(
-      title: index == 1 || index == 2 ? null : 'B612 Team3 Project',
-      drawer: const CustomDrawer(),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
-        type: BottomNavigationBarType.fixed,
-        onTap: (int index) {
-          controller.animateTo(index);
-        },
-        currentIndex: index,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: '홈',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.location_on_outlined),
-            label: '코스',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.directions_bike_outlined),
-            label: '주행',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.groups_outlined),
-            label: '팀',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.forum_outlined),
-            label: '게시판',
-          ),
-        ],
-      ),
-      child: TabBarView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: controller,
-        children: const [
-          RecordScreen(),
-          CourseScreen(),
-          NavigationScreen(),
-          TeamScreen(),
-          CommunityScreen(),
-        ],
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_) {
+        appExitShowDialog(context);
+      },
+      child: DefaultLayout(
+        title: index == 1 || index == 2 ? null : 'CoRiding',
+        drawer: const CustomDrawer(),
+        bottomNavigationBar: BottomNavigationBar(
+          selectedFontSize: 12,
+          unselectedFontSize: 12,
+          type: BottomNavigationBarType.fixed,
+          onTap: (int index) {
+            controller.animateTo(index);
+          },
+          currentIndex: index,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: '홈',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.location_on_outlined),
+              label: '코스',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.directions_bike_outlined),
+              label: '주행',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.groups_outlined),
+              label: '팀',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.forum_outlined),
+              label: '게시판',
+            ),
+          ],
+        ),
+        child: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: controller,
+          children: const [
+            RecordScreen(),
+            CourseScreen(),
+            NavigationScreen(),
+            TeamScreen(),
+            CommunityScreen(),
+          ],
+        ),
       ),
     );
   }

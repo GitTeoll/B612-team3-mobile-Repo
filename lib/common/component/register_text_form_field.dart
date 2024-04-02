@@ -20,6 +20,7 @@ class RegisterTextFormField extends StatelessWidget {
   final TextEditingController? textEditingController;
   final int maxLines;
   final String? initialValue;
+  final FocusNode? focusNode;
 
   const RegisterTextFormField({
     super.key,
@@ -34,6 +35,7 @@ class RegisterTextFormField extends StatelessWidget {
     this.filled = false,
     this.textEditingController,
     this.maxLines = 1,
+    this.focusNode,
   });
 
   @override
@@ -46,9 +48,7 @@ class RegisterTextFormField extends StatelessWidget {
       keyboardType: keyboardType,
       initialValue: initialValue,
       readOnly: readOnly,
-      onTapOutside: (_) {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
+      focusNode: focusNode,
       controller: textEditingController,
       maxLines: maxLines,
       style: const TextStyle(decorationThickness: 0),

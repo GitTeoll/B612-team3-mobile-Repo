@@ -6,6 +6,7 @@ import 'package:b612_project_team3/record/provider/current_record_model_provider
 import 'package:b612_project_team3/record/provider/drive_done_record_model_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class NavigationDetailScreen extends ConsumerWidget {
@@ -34,71 +35,111 @@ class NavigationDetailScreen extends ConsumerWidget {
         ),
       );
     } else {
-      return DefaultLayout(
-        backgroundColor: Colors.grey.shade700,
-        title: '',
-        appBarHeight: 0,
-        child: Column(
-          children: [
-            Flexible(
-              flex: 9,
-              child: GoogleMap(
-                onMapCreated: (controller) {
-                  ref
-                      .read(currentRecordModelProvider(original).notifier)
-                      .startCameraTracking(controller);
-                },
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                    currentRecordModel.curPosition.latitude,
-                    currentRecordModel.curPosition.longitude,
-                  ),
-                  zoom: 17,
-                  bearing: ref
-                          .read(currentRecordModelProvider(original).notifier)
-                          .initialBearing ??
-                      0.0,
-                ),
-                polylines: {
-                  Polyline(
-                    polylineId: const PolylineId("Tracking"),
-                    points: currentRecordModel.polylineCoordinates,
-                    color: Colors.red,
-                    width: 6,
-                  ),
-                },
-                markers: currentRecordModel.markers,
-                myLocationEnabled: true,
-                zoomControlsEnabled: false,
+      return PopScope(
+        canPop: false,
+        onPopInvoked: (_) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              surfaceTintColor: Colors.white,
+              backgroundColor: Colors.white,
+              content: const Text(
+                '주행을 종료하시겠습니까?',
+                style: TextStyle(fontSize: 16.0),
               ),
-            ),
-            Flexible(
-              flex: 2,
-              fit: FlexFit.tight,
-              child: googleMapController != null
-                  ? NavigationController(
-                      ref: ref,
-                      currentRecordModel: currentRecordModel,
-                      original: original,
-                    )
-                  : const SizedBox(),
-            ),
-            Flexible(
-              flex: 2,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width / 10,
+              actions: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                  ),
+                  onPressed: () async {
+                    await ref
+                        .read(currentRecordModelProvider(original).notifier)
+                        .stopPositionTracking();
+
+                    context.go('/');
+                  },
+                  child: const Text('종료'),
                 ),
-                child: Center(
-                  child: googleMapController != null
-                      ? NavigationStatusBar(
-                          currentRecordModel: currentRecordModel,
-                        )
-                      : const SizedBox(),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.grey.shade700,
+                  ),
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: const Text('취소'),
+                ),
+              ],
+            ),
+          );
+        },
+        child: DefaultLayout(
+          backgroundColor: Colors.grey.shade700,
+          title: '',
+          appBarHeight: 0,
+          child: Column(
+            children: [
+              Flexible(
+                flex: 9,
+                child: GoogleMap(
+                  onMapCreated: (controller) {
+                    ref
+                        .read(currentRecordModelProvider(original).notifier)
+                        .startCameraTracking(controller);
+                  },
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                      currentRecordModel.curPosition.latitude,
+                      currentRecordModel.curPosition.longitude,
+                    ),
+                    zoom: 17,
+                    bearing: ref
+                            .read(currentRecordModelProvider(original).notifier)
+                            .initialBearing ??
+                        0.0,
+                  ),
+                  polylines: {
+                    Polyline(
+                      polylineId: const PolylineId("Tracking"),
+                      points: currentRecordModel.polylineCoordinates,
+                      color: Colors.red,
+                      width: 6,
+                    ),
+                  },
+                  markers: currentRecordModel.markers,
+                  myLocationEnabled: true,
+                  zoomControlsEnabled: false,
                 ),
               ),
-            ),
-          ],
+              Flexible(
+                flex: 2,
+                fit: FlexFit.tight,
+                child: googleMapController != null
+                    ? NavigationController(
+                        ref: ref,
+                        currentRecordModel: currentRecordModel,
+                        original: original,
+                      )
+                    : const SizedBox(),
+              ),
+              Flexible(
+                flex: 2,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width / 10,
+                  ),
+                  child: Center(
+                    child: googleMapController != null
+                        ? NavigationStatusBar(
+                            currentRecordModel: currentRecordModel,
+                          )
+                        : const SizedBox(),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }

@@ -39,7 +39,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_dotenv: ^5.1.0
   geolocator: ^10.1.0
-  go_router: ^13.0.1
+  go_router: ^12.1.3
   flutter_riverpod: ^2.4.9
   google_maps_flutter: ^2.5.2
   kakao_flutter_sdk_user: ^1.8.0
@@ -57,6 +57,7 @@ dependencies:
   flutter_compass: ^0.8.0
   web_socket_channel: ^2.4.0
   card_swiper: ^3.0.1
+  keyboard_actions: ^4.2.0
 
 dev_dependencies:
   flutter_test:
